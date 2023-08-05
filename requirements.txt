@@ -15,7 +15,6 @@ duckduckgo-search==3.7.1
 exceptiongroup==1.1.1
 Flask==2.3.2
 flaskwebgui==1.0.6
-googlesearch-python==1.2.3
 greenlet==2.0.2
 h11==0.14.0
 h2==4.1.0

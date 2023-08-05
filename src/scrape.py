@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
-from googlesearch import search
 from duckduckgo_search import DDGS
 from urllib.parse import urlparse
 from selenium.webdriver.common.by import By
@@ -71,9 +70,18 @@ class Scrape:
         """
         Scrapes search results from Google.
         """
-        dips = search(self.query, advanced=True)
-        ans = [{'title': dip.title, 'url': dip.url, 'body': dip.description} for dip in dips]
-        self.results.append({'engine': 'Google', 'results': ans})
+        driver = webdriver.Chrome(service=self.driver_service, options=self.chrome_options)
+        key = self.get_url(base="https://www.google.com/", t="search?q")
+        driver.get(key)
+        _refs = []
+        links = driver.find_elements(By.CLASS_NAME, 'yuRUbf')
+        for link in links:
+            plink = link.find_element(By.TAG_NAME, 'a')
+            url = plink.get_attribute("href")
+            title = plink.find_element(By.TAG_NAME, 'h3').text
+            _refs.append({'title': title, 'url': url})
+        driver.close()
+        self.results.append({'engine': 'Google', 'results': _refs})
 
     def get_bing_urls(self) -> None:
         """
@@ -147,7 +155,7 @@ class Scrape:
         """
         Scrapes search results from DuckDuckGo.
         """
-        ans = [{'title': r['title'], 'url': r['href'], 'body': r['body']} for r in DDGS().text(s)]
+        ans = [{'title': r['title'], 'url': r['href'], 'body': r['body']} for r in DDGS().text(self.query)]
         self.results.append({'engine': 'Duckduckgo', 'results': ans})
 
     def get_youtube_urls(self) -> None:
@@ -160,7 +168,6 @@ class Scrape:
         try:
             driver = webdriver.Chrome(service=self.driver_service, options=self.chrome_options)
             driver.get(url)
-
             elem = driver.find_element(By.ID, 'contents')
             children_elems = elem.find_elements(By.CSS_SELECTOR, 'ytd-video-renderer')  # blocks
             for child in children_elems:
@@ -186,14 +193,14 @@ class Scrape:
                             pass
                     else:
                         pass
-
-                unit = {'title': video_title, 'url': video_url, 'body': body, 'channel_name': channel_name, 'channel_url': channel_url}
+                unit = {'title': video_title, 'url': video_url, 'body': body, 'channel_name': channel_name,
+                        'channel_url': channel_url}
                 ans.append(unit)
             self.results.append({'engine': 'YouTube', 'results': ans})
+            driver.close()
         except NoSuchElementException:
             print('\033[0mYT: {}'.format(url))
 
     def get_url(self, base, t) -> str:
         x = "+".join(self.query.split(' '))
         return f"{base}{t}={x}"
-
