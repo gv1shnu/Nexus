@@ -1,0 +1,54 @@
+/* Set the font family and margin for the entire document */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-image: url('../images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+/* Styling for heading 3 elements */
+h3 {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+/* Remove default bullet points and padding for unordered lists */
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+/* Add margin at the bottom for list items */
+li {
+    margin-bottom: 5px;
+}
+
+/* Styling for anchor tags */
+a {
+    color: #0084ff;
+    text-decoration: none;
+}
+
+/* Apply underline on anchor tags when hovered */
+a:hover {
+    text-decoration: underline;
+}
+
+/* Styling for the execution time element */
+.execution-time {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #f3f3f3;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Add margin at the bottom for the result element */
+#result {
+    margin-bottom: 20px;
+}
