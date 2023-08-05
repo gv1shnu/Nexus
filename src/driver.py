@@ -1,15 +1,17 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import ChromeOptions
-from src.chr import chrome_installed
+from src.chr import chrome_installed, os_name
 
 
 def initialise_driver():
     if not chrome_installed:
         return
 
+    service = Service(executable_path='./cdr/chromedriver-linux64/chromedriver')
+    if os_name == "Windows":
+        service = Service(executable_path='./cdr/chromedriver-win32/chromedriver.exe')
     try:
-        service = Service(executable_path='./src/chromedriver.exe')
         options = ChromeOptions()
         options.add_argument("--headless --no-sandbox --disable-dev-shm-usage --disable-gpu")
         _driver = webdriver.Chrome(service=service, options=options)
