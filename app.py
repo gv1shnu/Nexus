@@ -17,12 +17,7 @@ def index():
 @app.route('/submit', methods=['POST'])
 def submit():
     """
-    Processes the user's query and returns the result.
-
-    The function retrieves the user's query from the form submitted in the index.html page.
-    It measures the execution time of the process() function by recording the start time before processing
-    and the end time after processing. Then it renders the success.html template, passing the query,
-    result, and execution time as parameters.
+    Processes the user's query and returns the result to the submit page.
     """
     query = request.form.get('q')
     start_time = time.time()
@@ -33,11 +28,4 @@ def submit():
 
 
 if __name__ == '__main__':
-    """
-        Run the Flask application with a graphical user interface.
-
-        The FlaskUI class is used to run a Flask application with a graphical user interface (GUI).
-        By calling the run() method on a FlaskUI object, the Flask application specified by app will be executed 
-        with a GUI interface using the Flask development server.
-    """
     FlaskUI(app=app, server="flask").run()

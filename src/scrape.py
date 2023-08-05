@@ -48,10 +48,7 @@ class Scrape:
     def get_results(self):
         """
         Performs web scraping to obtain search results.
-
         Spawns multiple threads to scrape search results from different search engines concurrently.
-        Each thread calls a separate method to scrape results from a specific search engine.
-        Waits for all threads to complete before returning the final results.
 
         Returns:
             list: A list of dictionaries representing the search results.
@@ -72,9 +69,7 @@ class Scrape:
     def get_google_urls(self):
         """
         Scrapes search results from Google.
-
         Uses the `search` function from the `googlesearch` library to perform the search.
-        Extracts the title, URL and description for each result and adds them to the results list.
         """
         ans = list()
         try:
@@ -89,9 +84,7 @@ class Scrape:
     def get_bing_urls(self):
         """
         Scrapes search results from Bing.
-
         Sends a GET request to Bing with the query as a parameter.
-        Extracts the title, URL and description for each result and adds them to the results list.
         """
         base, t = "https://www.bing.com/", "search?q"
         url = f"{base}{t}={self.query}"
@@ -125,9 +118,7 @@ class Scrape:
     def get_yahoo_urls(self):
         """
         Scrapes search results from Yahoo.
-
         Sends a GET request to Yahoo with the query as a parameter.
-        Extracts the  title, URL and description for each result and adds them to the results list.
         """
         base_url = 'https://search.yahoo.com/search'
         params = {
@@ -168,9 +159,7 @@ class Scrape:
     def get_duckduckgo_urls(self):
         """
         Scrapes search results from DuckDuckGo.
-
         Uses the `DDGS` class from the `duckduckgo_search` library to perform the search.
-        Extracts the title, URL and description for each result and adds them to the results list.
         """
         ans = list()
         try:
@@ -184,9 +173,7 @@ class Scrape:
     def get_youtube_urls(self):
         """
         Scrapes search results from YouTube.
-
         Uses Selenium WebDriver to simulate a browser and perform the search.
-        Extracts the title, URL and description for each result and adds them to the results list.
         """
         ans = list()
         base, t = "https://www.youtube.com/", "results?search_query"
