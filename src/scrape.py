@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from selenium.webdriver.common.by import By
 
 
-def is_valid_url(url):
+def is_valid_url(url) -> bool:
     """
     Checks if a URL is valid.
 
@@ -46,7 +46,7 @@ class Scrape:
         self.driver_service = ds
         self.results = []
 
-    def get_results(self):
+    def get_results(self) -> list:
         """
         Performs web scraping to obtain search results.
         Spawns multiple threads to scrape search results from different search engines concurrently.
@@ -67,18 +67,15 @@ class Scrape:
             thread.join()
         return self.results
 
-    def get_google_urls(self):
+    def get_google_urls(self) -> None:
         """
         Scrapes search results from Google.
         """
-        ans = list()
         dips = search(self.query, advanced=True)
-        for dip in dips:
-            unit = {'title': dip.title, 'url': dip.url, 'body': dip.description}
-            ans.append(unit)
+        ans = [{'title': dip.title, 'url': dip.url, 'body': dip.description} for dip in dips]
         self.results.append({'engine': 'Google', 'results': ans})
 
-    def get_bing_urls(self):
+    def get_bing_urls(self) -> None:
         """
         Scrapes search results from Bing.
         Sends a GET request to Bing with the query as a parameter.
@@ -110,7 +107,7 @@ class Scrape:
         except NoSuchElementException:
             print('\033[0mBing. {}'.format(url))
 
-    def get_yahoo_urls(self):
+    def get_yahoo_urls(self) -> None:
         """
         Scrapes search results from Yahoo.
         Sends a GET request to Yahoo with the query as a parameter.
@@ -146,17 +143,14 @@ class Scrape:
         except NoSuchElementException:
             print('\033[0mYahoo. {}'.format(response.url))
 
-    def get_duckduckgo_urls(self):
+    def get_duckduckgo_urls(self) -> None:
         """
         Scrapes search results from DuckDuckGo.
         """
-        ans = list()
-        for r in DDGS().text(self.query):
-            unit = {'title': r['title'], 'url': r['href'], 'body': r['body']}
-            ans.append(unit)
+        ans = [{'title': r['title'], 'url': r['href'], 'body': r['body']} for r in DDGS().text(s)]
         self.results.append({'engine': 'Duckduckgo', 'results': ans})
 
-    def get_youtube_urls(self):
+    def get_youtube_urls(self) -> None:
         """
         Scrapes search results from YouTube.
         Uses Selenium WebDriver to simulate a browser and perform the search.
@@ -199,7 +193,7 @@ class Scrape:
         except NoSuchElementException:
             print('\033[0mYT: {}'.format(url))
 
-    def get_url(self, base, t):
+    def get_url(self, base, t) -> str:
         x = "+".join(self.query.split(' '))
         return f"{base}{t}={x}"
 
