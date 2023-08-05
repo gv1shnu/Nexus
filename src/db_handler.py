@@ -1,5 +1,4 @@
 import os
-import time
 from tinydb import TinyDB, Query
 from src.scrape import Scrape
 from datetime import date

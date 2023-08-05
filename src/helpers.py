@@ -1,35 +1,48 @@
-from src.db_handler import DBHandler
-from datetime import date
+# helper functions for scrapers
+
+from urllib.parse import urlparse
+import random
 
 
-def process(query: str) -> tuple:
+def get_domain(url: str):
+    parsed_url = urlparse(url)
+    return parsed_url.netloc
+
+
+def is_valid_url(url: str) -> bool:
     """
-    Processes a query by checking the search results database.
-    Takes a query as input and checks the search results database using the DBHandler class.
+    Checks if a URL is valid.
 
     Args:
-        query (str): The user's query.
+        url (str): The URL to check.
 
     Returns:
-        list or None: The search results obtained from the database or web scraping, or None if no results are found.
+        bool: True if the URL is valid, False otherwise.
     """
-    dbhandler = DBHandler()
-    x = dbhandler.query(req=query)
-
-    if x:  # entry exists
-        if get_diff_dates(date1=x['date'], date2=str(date.today())) >= 7:  # is older than a week
-            dbhandler.update(entry=x)
-        else:  # is fresh
-            return x['count'], x['time'], x['results']
-    else:
-        print("\033[92m No entry found.\n Scraping...")
-        return dbhandler.insert(req=query)
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
 
 
-def get_diff_dates(date1: str, date2: str) -> int:
-    t1 = date1.split('-')
-    r1 = (int(t1[0]) - 1) * 365 + int(t1[1]) * 12 + int(t1[2])
-    t2 = date2.split('-')
-    r2 = (int(t2[0]) - 1) * 365 + int(t2[1]) * 12 + int(t2[2])
+def get_url(q: str, base: str, t: str) -> str:
+    x = "+".join(q.split(' '))
+    return f"{base}{t}={x}"
 
-    return r2 - r1
+
+user_agents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+    'Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/91.0.864.48 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/92.0.902.55 Safari/537.36'
+]
+
+
+def get_header():
+    tmp = random.choice(user_agents)
+    return {'User-Agent': tmp}
