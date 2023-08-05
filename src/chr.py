@@ -13,5 +13,4 @@ def is_chrome_installed():
 
 os_name = platform.system()
 chrome_installed = is_chrome_installed()
-if not chrome_installed:
-    print("Chrome is not installed.")
+

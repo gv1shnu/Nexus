@@ -13,12 +13,14 @@ def initialise_driver():
         chrome_driver_path = "./cdr/chromedriver-linux64/chromedriver"
         chmod_command = f"chmod +x {chrome_driver_path}"
         subprocess.run(chmod_command, shell=True)
+        headless = "--headless=chrome"
     else:
         chrome_driver_path = "./cdr/chromedriver-win32/chromedriver.exe"
+        headless = "--headless"
     try:
         service = Service(executable_path=chrome_driver_path)
         options = ChromeOptions()
-        options.add_argument("--headless --no-sandbox --disable-dev-shm-usage --disable-gpu")
+        options.add_argument(f"{headless} --no-sandbox --disable-dev-shm-usage --disable-gpu")
         _driver = webdriver.Chrome(service=service, options=options)
         str1 = _driver.capabilities['browserVersion']
         str2 = _driver.capabilities['chrome']['chromedriverVersion'].split(' ')[0]
