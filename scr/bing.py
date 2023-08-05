@@ -1,6 +1,4 @@
-import requests
-from bs4 import BeautifulSoup
-from src.helpers import is_valid_url, get_domain, get_url, get_header
+from scr.helpers import is_valid_url, get_domain, get_url, getSoup
 
 
 def get_bing_results(query: str) -> list:
@@ -16,9 +14,7 @@ def get_bing_results(query: str) -> list:
     url = get_url(q=query, base="https://www.bing.com/", t="search?q")
     engine_name = "Bing"
     try:
-        header = get_header()
-        response = requests.get(url, headers=header).content
-        soup = BeautifulSoup(response, 'html.parser')
+        soup = getSoup(url)
         data1 = soup.find('ol', id='b_results')
         if data1:
             data2 = data1.find_all("li")
@@ -41,6 +37,6 @@ def get_bing_results(query: str) -> list:
                     unit['channel_url'] = get_domain(unit['url'])
                     unit['engine'] = engine_name
                     cards.append(unit)
-    except Exception:
-        print('\033[0m{}. {}'.format(engine_name, url))
+    except Exception as e:
+        print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
     return cards

@@ -1,4 +1,4 @@
-from src.helpers import get_url
+from scr.helpers import get_url
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -48,10 +48,11 @@ def get_yt_results(query: str) -> list:
                     channel_name = k.text
                 if i >= 2:
                     break
+
             unit = {'engine': engine_name, 'title': video_title, 'url': video_url, 'body': body, 'channel_name': channel_name,
                     'channel_url': channel_url}
             cards.append(unit)
         driver.close()
-    except (NoSuchElementException, WebDriverException):
-        print('\033[0m{}: {}'.format(engine_name, url))
+    except (NoSuchElementException, WebDriverException) as e:
+        print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
     return cards

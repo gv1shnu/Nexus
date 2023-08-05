@@ -1,5 +1,5 @@
 from duckduckgo_search import DDGS
-from src.helpers import get_domain
+from scr.helpers import get_domain
 
 
 def get_ddg_results(query: str) -> list:

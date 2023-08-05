@@ -1,7 +1,9 @@
 # helper functions for scrapers
 
-from urllib.parse import urlparse
 import random
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
+import requests
 
 
 def get_domain(url: str) -> str:
@@ -33,6 +35,12 @@ def is_valid_url(url: str) -> bool:
         return all([result.scheme, result.netloc])
     except ValueError:
         return False
+
+
+def getSoup(url: str):
+    header = get_header()
+    response = requests.get(url, headers=header).content
+    return BeautifulSoup(response, 'html.parser')
 
 
 def get_url(q: str, base: str, t: str) -> str:

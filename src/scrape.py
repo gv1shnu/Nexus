@@ -1,11 +1,22 @@
 import csv
 import threading
 import time
-from src.google import get_google_results
-from src.bing import get_bing_results
-from src.ddg import get_ddg_results
-from src.yahoo import get_yahoo_results
-from src.yt import get_yt_results
+from scr.google import get_google_results
+from scr.bing import get_bing_results
+from scr.ddg import get_ddg_results
+from scr.yahoo import get_yahoo_results
+from scr.yt import get_yt_results
+
+
+# Remove duplicate URLs
+def preprocess(my_list: list) -> list:
+    unique_urls = set()
+    jkl = []
+    for item in my_list:
+        if item['url'] not in unique_urls:
+            unique_urls.add(item['url'])
+            jkl.append(item)
+    return jkl
 
 
 class Scrape:
@@ -41,7 +52,7 @@ class Scrape:
             thread.start()
         for thread in threads:
             thread.join()
-        return self.results
+        return preprocess(self.results)
 
     def search(self, name, func) -> None:
         """
@@ -56,7 +67,9 @@ class Scrape:
         start = time.time()
         ans = func(self.query)
         end = time.time()
-        self.save_stat(name, len(ans), round((end - start), 2))
+        timer = round((end - start), 2)
+        print(f"{name} took {timer}s")
+        self.save_stat(name, len(ans), timer)
         self.results.extend(ans)
 
     def save_stat(self, engine_name: str, count: int, timer: float) -> None:

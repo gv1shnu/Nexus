@@ -1,6 +1,4 @@
-import requests
-from src.helpers import get_url, is_valid_url, get_header, get_domain
-from bs4 import BeautifulSoup
+from scr.helpers import get_url, is_valid_url, get_domain, getSoup
 
 
 def get_yahoo_results(query: str) -> list:
@@ -13,12 +11,10 @@ def get_yahoo_results(query: str) -> list:
     Returns: a list of dictionaries
     """
     engine_name = "Yahoo"
-    base_url = get_url(q=query, base='https://search.yahoo.com/', t='search?q')
-    header = get_header()
-    response = requests.get(base_url, headers=header)
+    url = get_url(q=query, base='https://search.yahoo.com/', t='search?q')
     cards = list()
     try:
-        soup = BeautifulSoup(response.content, 'html.parser')
+        soup = getSoup(url)
         result_container = soup.find('ol', class_='reg searchCenterMiddle')
         if result_container:
             for li in result_container.find_all('li'):
@@ -43,6 +39,6 @@ def get_yahoo_results(query: str) -> list:
                     unit['channel_url'] = get_domain(unit['title'])
                     unit['engine'] = engine_name
                     cards.append(unit)
-    except Exception:
-        print('\033[0m{}. {}'.format(engine_name, response.url))
+    except Exception as e:
+        print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
     return cards

@@ -1,5 +1,5 @@
 from googlesearch import search
-from src.helpers import get_domain
+from scr.helpers import get_domain
 import requests
 
 

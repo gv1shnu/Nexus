@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from src.process import process
+from src.db_handler import DBHandler
 from flaskwebgui import FlaskUI
 from src.driver import driver_service
 
@@ -41,7 +41,8 @@ def submit():
     """
     global query, count, execution_time, pages
     query = request.form.get('q')
-    count, execution_time, pages = process(query)
+    dbhandler = DBHandler()
+    count, execution_time, pages = dbhandler.get(query)
     return redirect(url_for('index'))
 
 

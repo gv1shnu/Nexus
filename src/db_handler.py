@@ -5,6 +5,23 @@ from src.scrape import Scrape
 from datetime import date
 
 
+def is_entry_old(entry_date: str) -> bool:
+    """
+    Checks if the entry date is older than a week.
+
+    Args:
+        entry_date (str): The date of the entry.
+
+    Returns:
+        bool: True if the entry is older than a week, False otherwise.
+    """
+    t1 = entry_date.split('-')
+    t2 = str(date.today()).split('-')
+    r = abs((int(t2[0]) - int(t1[0])) * 365 + (int(t2[1]) - int(t1[1])) * 12 + (int(t2[2]) - int(t1[2])))
+
+    return r >= 7  # is older than a week
+
+
 class DBHandler:
     def __init__(self):
         """
@@ -61,6 +78,16 @@ class DBHandler:
                 'pages': pages
                 }
 
+    def get(self, query: str) -> tuple:
+        result = self.query(req=query)
+        if result:  # entry exists
+            if is_entry_old(entry_date=result['date']):
+                return self.update(entry=result)
+            else:  # is fresh
+                return result['count'], result['time'], result['pages']
+        else:
+            return self.insert(req=query)
+
     def insert(self, req: str) -> tuple:
         """
         Inserts a new entry into the search results database.
@@ -74,8 +101,10 @@ class DBHandler:
         - Tuple containing count, time, and paginated pages.
         """
         if req:
+            print("\033[92m No entry found.\n Scraping...")
             ans = self.retrieve(req)
             self.db.insert(ans)
+            print("\033[92mDone.")
             return ans['count'], ans['time'], ans['pages']
         print("\033[95m Null request")
 
