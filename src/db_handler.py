@@ -1,6 +1,7 @@
 import os
 from tinydb import TinyDB, Query
 from src.scrape import Scrape
+from datetime import date
 
 
 class DBHandler:
@@ -22,8 +23,31 @@ class DBHandler:
         if req:
             scrape = Scrape(req, ds)
             results = scrape.get_results()
-            self.db.insert({'query': req, 'results': results})
+            ans = {'query': req,
+                   'date': str(date.today()),
+                   'results': results
+                   }
+            self.db.insert(ans)
             return results
+        print("\033[95m Null request")
+        return []
+
+    def update(self, entry: list, ds) -> list:
+        """
+        Updates an old entry into the search results database.
+        Takes a request as input and driver service as pass-along parameter and
+         performs web scraping to obtain the new search results.
+        """
+        if entry:
+            req = entry['query']
+            scrape = Scrape(req, ds)
+            results = scrape.get_results()
+            ans = {'query': req,
+                   'date': str(date.today()),
+                   'results': results
+            }
+            self.db.update(ans, Query().query == req)
+            return ans['results']
         print("\033[95m Null request")
         return []
 
@@ -34,5 +58,5 @@ class DBHandler:
         query_result = self.db.search(Query().query == req)
         if query_result:
             print("Entry exists")
-            return query_result[0]['results']
+            return query_result[0]
         return []

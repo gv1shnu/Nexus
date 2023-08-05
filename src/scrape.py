@@ -114,7 +114,8 @@ class Scrape:
                                 unit['title'], unit['url'] = h2_element.text, anchor_tag['href']
                     if caption:
                         p_tag = caption.find('p')
-                        unit['body'] = p_tag.text[3:]
+                        if p_tag:
+                            unit['body'] = p_tag.text[3:]
 
                     if unit['title'] and unit['url']:
                         unit['channel_name'] = get_domain(unit['url'])

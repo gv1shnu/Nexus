@@ -1,4 +1,5 @@
 from src.db_handler import DBHandler
+from datetime import date
 
 
 def process(query: str, driver_service) -> list:
@@ -15,7 +16,22 @@ def process(query: str, driver_service) -> list:
     """
     dbhandler = DBHandler()
     x = dbhandler.query(req=query)
-    if not x:
+    if x:  # entry exists
+        if get_diff_dates(date1=x['date'], date2=str(date.today())) >= 7:  # is older than a week
+            y = dbhandler.update(entry=x, ds=driver_service)
+            return y
+        else:  # is fresh
+            return x['results']
+    else:
         print("\033[92m No entry found.\n Scraping...\033[92m")
-        x = dbhandler.insert(req=query, ds=driver_service)
-    return x
+        y = dbhandler.insert(req=query, ds=driver_service)
+        return y
+
+
+def get_diff_dates(date1: str, date2: str) -> int:
+    t1 = date1.split('-')
+    r1 = (int(t1[0]) - 1) * 365 + int(t1[1]) * 12 + int(t1[2])
+    t2 = date2.split('-')
+    r2 = (int(t2[0]) - 1) * 365 + int(t2[1]) * 12 + int(t2[2])
+
+    return r2 - r1
