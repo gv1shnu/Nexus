@@ -1,15 +1,24 @@
+import subprocess
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import ChromeOptions
 from src.chr import chrome_installed, os_name
 
 
+def make_chromedriver_executable(driver_path):
+    try:
+        subprocess.run(["chmod", "+x", driver_path])
+    except Exception as e:
+        print(f"Failed to make chromedriver executable: {str(e)}")
+
+
 def initialise_driver():
     if not chrome_installed:
-        return
+        return None
 
     if os_name == "Linux":
         chrome_driver_path = "./cdr/chromedriver"
+        make_chromedriver_executable(chrome_driver_path)
         headless = "--headless=chrome"
         gpu = ""
     else:
@@ -39,4 +48,3 @@ def initialise_driver():
 
 
 driver = initialise_driver()
-

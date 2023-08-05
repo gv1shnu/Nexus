@@ -1,10 +1,10 @@
-pyinstaller build command [Windows]
+-----------Build command [Windows]------------------------
 
-  pyinstaller --windowed --clean --onefile --icon=static/favicon/favicon.ico --name SearchNexus --add-data "templates;templates" --add-data "static;static" --add-data "src;src" --add-data "scr;scr" --add-data "cdr;cdr" app.py
-
-pyinstaller build command [Linux]
-
-  pyinstaller --windowed --console --clean --onefile --icon=static/favicon/favicon.ico --name SearchNexus --add-data "templates:templates" --add-data "static:static" --add-data "src:src" --add-data "scr:scr" --add-data "cdr:cdr" "app.py"
+    pip install pyinstaller
+    pyinstaller --windowed --clean --onefile --icon=static/favicon/favicon.ico --name SearchNexus --add-data "templates;templates" --add-data "static;static" --add-data "src;src" --add-data "scr;scr" --add-data "cdr;cdr" app.py
 
 
-help: https://elc.github.io/posts/executable-flask-pyinstaller/
+-----------Build command [Linux]------------------------
+
+    pip install cx-Freeze
+    python setup.py build
