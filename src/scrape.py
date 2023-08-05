@@ -8,6 +8,17 @@ from src.yahoo import get_yahoo_results
 from src.yt import get_yt_results
 
 
+# Remove duplicate URLs
+def preprocess(my_list):
+    unique_urls = set()
+    jkl = []
+    for item in my_list:
+        if item['url'] not in unique_urls:
+            unique_urls.add(item['url'])
+            jkl.append(item)
+    return jkl
+
+
 class Scrape:
     def __init__(self, q: str):
         """
@@ -41,7 +52,7 @@ class Scrape:
             thread.start()
         for thread in threads:
             thread.join()
-        return self.results
+        return preprocess(self.results)
 
     def search(self, name, func) -> None:
         """
