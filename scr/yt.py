@@ -1,12 +1,7 @@
 from scr.helpers import get_url
 from selenium.webdriver.common.by import By
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from src.driver import driver_service
 from selenium.common import NoSuchElementException, WebDriverException
-
-chrome_options = Options()
-chrome_options.add_argument("--headless --no-sandbox --disable-dev-shm-usage --disable-gpu")
 
 
 def get_yt_results(query: str) -> list:
@@ -22,7 +17,7 @@ def get_yt_results(query: str) -> list:
     cards = list()
     url = get_url(q=query, base="https://www.youtube.com/", t="results?search_query")
     try:
-        driver = webdriver.Chrome(service=driver_service, options=chrome_options)
+        driver = driver_service
         driver.get(url)
         elem = driver.find_element(By.ID, 'contents')
         children_elems = elem.find_elements(By.ID, 'dismissible')

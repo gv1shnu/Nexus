@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>History - Search Nexus</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/history.css') }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+    </head>
+    <body>
+        <div id="history-container">
+            {% if page %}
+                <ul>
+                    {% for query in page %}
+                        <!-- Display search results -->
+                        <li>
+                            <div class="card">
+                                {% if query %}
+                                    <a href="{{ url_for('submit', q=query[1]) }}">{{ query[0] }} - {{ query[1] }}</a>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <!-- Display a message if no results found -->
+                <p style="color: #fff">No results found.</p>
+            {% endif %}
+        </div>
+
+        <!-- Pagination controls -->
+        <div class="pagination">
+            {% if total_pages > 1 %}
+                {% if current_page > 1 %}
+                    <a href="{{ url_for('navigate', page=current_page - 1) }}">Previous</a>
+                {% endif %}
+
+                {% for page_num in range(1, total_pages + 1) %}
+                    {% if page_num == current_page %}
+                        <a href="{{ url_for('navigate', page=page_num) }}" class="active">{{ page_num }}</a>
+                    {% else %}
+                        <a href="{{ url_for('navigate', page=page_num) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if current_page < total_pages %}
+                    <a href="{{ url_for('navigate', page=current_page + 1) }}">Next</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ url_for('navigate', page=page_num) }}" class="active">{{ 1 }}</a>
+            {% endif %}
+        </div>
+    </body>
+</html>

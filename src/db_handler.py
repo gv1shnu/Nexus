@@ -1,3 +1,4 @@
+import json
 import os
 import time
 from tinydb import TinyDB, Query
@@ -30,7 +31,8 @@ class DBHandler:
         """
         if not os.path.exists('db'):
             os.mkdir('db')
-        self.db = TinyDB('db/search_results_db.json')
+        self.db_path = 'db/search_results_db.json'
+        self.db = TinyDB(self.db_path)
         self.items_per_page = 7
 
     def pagify(self, my_list: list) -> list:
@@ -88,18 +90,24 @@ class DBHandler:
         else:
             return self.insert(req=query)
 
+    def get_queries(self) -> list:
+        with open(self.db_path, 'r') as file:
+            data = json.load(file)
+            data = data['_default']
+            return self.pagify([(key, data[key]['query']) for key in reversed(list(data.keys()))])
+
     def insert(self, req: str) -> tuple:
         """
-        Inserts a new entry into the search results database.
-        Takes a request as input and driver service as pass-along parameter and
-         performs web scraping if not stored, to obtain the search results.
+            Inserts a new entry into the search results database.
+            Takes a request as input and driver service as pass-along parameter and
+             performs web scraping if not stored, to obtain the search results.
 
-        Parameters:
-        - req: The search request.
+            Parameters:
+            - req: The search request.
 
-        Returns:
-        - Tuple containing count, time, and paginated pages.
-        """
+            Returns:
+            - Tuple containing count, time, and paginated pages.
+            """
         if req:
             print("\033[92m No entry found.\n Scraping...")
             ans = self.retrieve(req)

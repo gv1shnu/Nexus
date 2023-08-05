@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Search Nexus</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
-        <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
-    </head>
-    <body>
-        <div class="container">
-            <h1 id="heading">Search Nexus</h1>
-            <form action="/submit" method="post">
-                <div class="search-container">
-                    <input type="text" id="q" name="q" placeholder="Enter your query" autofocus>
-                    <button type="submit" style="display: none"></button>
-                </div>
-            </form>
-        </div>
+<head>
+    <title>Search Nexus</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+</head>
+<body>
+    <a href="{{ url_for('history') }}" id="history-button">
+        <i class="fa fa-history" style="font-size: 20px;"></i>
+    </a>
+    <div class="container">
+        <h1 id="heading">Search Nexus</h1>
+        <br>
+        <form action="/submit" method="post">
+            <div class="search-container">
+                <input type="text" id="q" name="q" placeholder="Enter your query" autofocus>
+                <button type="submit" style="display: none;"></button>
+            </div>
+        </form>
+    </div>
 
-        <footer id="footer">
-            <a href="https://github.com/gv1shnu/SearchNexus" target="_blank" class="github-corner">
-                <i class="fa fa-github" style="font-size:25px"></i>
-            </a>
-            <p class="copyright">© 2023 Copyright | G. Vishnu </p>
-        </footer>
-    </body>
+    <footer id="footer">
+        <a href="https://github.com/gv1shnu/SearchNexus" target="_blank" class="github-corner">
+            <i class="fa fa-github" style="font-size:25px"></i>
+        </a>
+        <p class="copyright">© 2023 Copyright | G. Vishnu </p>
+    </footer>
+</body>
 </html>
