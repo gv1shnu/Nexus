@@ -76,11 +76,11 @@ if __name__ == '__main__':
     port = 8080
     # To run like a desktop app
 
-    # ui = FlaskUI(app=app, server="flask", port=port).run()
+    ui = FlaskUI(app=app, server="flask", port=port).run()
 
     # To run on browser
 
-    webbrowser.open(f'http://127.0.0.1:{port}/')
-    app.run(port=port)
+    # webbrowser.open(f'http://127.0.0.1:{port}/')
+    # app.run(port=port)
 
 
