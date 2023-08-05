@@ -1,5 +1,9 @@
-pyinstaller build command
+pyinstaller build command [Windows]
 
-pyinstaller --windowed --console --clean --onefile --icon=static/favicon/favicon.ico --name SearchNexus --add-data "templates;templates" --add-data "static;static" --add-data "src;src" app.py
+  pyinstaller --windowed --console --clean --onefile --icon=static/favicon/favicon.ico --name SearchNexus --add-data "templates;templates" --add-data "static;static" --add-data "src;src" app.py
+
+pyinstaller build command [Linux]
+
+  pyinstaller --windowed --console --clean --onefile --icon=static/favicon/favicon.ico --name SearchNexus --add-data "templates:templates" --add-data "static:static" --add-data "src:src" "app.py"
 
 help: https://elc.github.io/posts/executable-flask-pyinstaller/
