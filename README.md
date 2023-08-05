@@ -17,24 +17,18 @@ Search Nexus is a flask-based application that allows users to perform searches 
 
 **Note**: Make sure Chrome is your default browser. It helps. 
 
-## Screenshots
+## Demo
+Please view following demo in different formats.
+
+### Video
+  Click [here](https://youtu.be/yyqwyAamiaQ) to watch the **latest** demo on YouTube.
+
+### Screenshots
+  Look at the following screenshots for old demo.
 
 ![Screenshot (1)](https://github.com/gv1shnu/SearchNexus/assets/121789146/98b0fee5-2b3f-4e04-b81f-2b9d08c4e101)
 
 ![Screenshot (1-1)](https://github.com/gv1shnu/SearchNexus/assets/121789146/3a5fa9a6-af2e-4574-904d-395ddcea1659)
-
-![Screenshot (2)](https://github.com/gv1shnu/SearchNexus/assets/121789146/a86d71a9-a595-425f-8dc6-e8b49cae0c20)
-
-![Screenshot (2-5)](https://github.com/gv1shnu/SearchNexus/assets/121789146/5e85b02a-aacf-4dd4-9e42-32c9b11dfdf6)
-
-![Screenshot (17)](https://github.com/gv1shnu/SearchNexus/assets/121789146/c8669de2-864c-4ead-8473-bc34142ee18c)
-
-![Screenshot (16)](https://github.com/gv1shnu/SearchNexus/assets/121789146/b8fc27dd-4e27-4147-a8c4-b1dd40ffe02d)
-
-![Screenshot (18)](https://github.com/gv1shnu/SearchNexus/assets/121789146/ecc9d9fa-560b-4506-a91d-6d0a41761197)
-
-![Screenshot (19)](https://github.com/gv1shnu/SearchNexus/assets/121789146/4a596a83-ac35-477e-a55a-f4345ed67965)
-
 
 ## Installation
 
