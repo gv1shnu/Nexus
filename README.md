@@ -19,18 +19,8 @@ Search Nexus is a flask-based application that allows users to perform searches 
 
 ## Demo
 
-Please view following demo in different formats.
+ [Will update]
 
-
-### Video
-  Click [here](https://youtu.be/yyqwyAamiaQ) to watch old demo on YouTube.
-
-### Homepage screenshot
-
-  Look at the following screenshots for old demo.
-
-
-![Screenshot (1)](https://github.com/gv1shnu/SearchNexus/assets/121789146/98b0fee5-2b3f-4e04-b81f-2b9d08c4e101)
 
 ## Installation
 
@@ -70,17 +60,6 @@ Follow these steps to set up and run the Search Nexus Flask application:
 ## Contributing
 
 Contributions and code reviews are welcome! 
-
-TODO
-----
-- [ ] <s>Update the blurry icon</s>
-- [x] Order rank-wise
-- [x] Center the result-container div
-- [x] Properly scrape for YouTube video description again
-- [ ] <s>Add more search engines</s>
-- [x] Pagination
-- [x] Change the background of success.html
-- [x] Organize displayed search results more comprehensively (card style)
 
 ## License
 
