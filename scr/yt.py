@@ -57,10 +57,6 @@ def get_yt_results(query: str) -> list:
     return cards
 
 
-if __name__ == '__main__':
-    results = get_yt_results('ios v android')
-    print(results)
-
 # HTML tree structure
 # ----- div#contents. style-scope ytd-item-section-renderer style-scope ytd-item-section-renderer
 # ------ div#dismissible.style-scope ytd-video-renderer

@@ -31,7 +31,8 @@ class Scrape:
         ]  # google will run non-threaded
 
         if os_name == "Windows":
-            self.pairs.append({'name': "YT", 'func': get_yt_results})
+            # self.pairs.append({'name': "YT", 'func': get_yt_results})
+            pass
 
     def get_all_results(self) -> list:
         threads = []
