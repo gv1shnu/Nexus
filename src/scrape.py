@@ -6,6 +6,9 @@ from scr.bing import get_bing_results
 from scr.ddg import get_ddg_results
 from scr.yahoo import get_yahoo_results
 from scr.yt import get_yt_results
+import platform
+
+os_name = platform.system()
 
 
 # Remove duplicate URLs
@@ -16,6 +19,9 @@ def preprocess(my_list: list) -> list:
         if item['url'] not in unique_urls:
             unique_urls.add(item['url'])
             jkl.append(item)
+        elif item['url']:
+            # print("Duplicate, {}: {}".format(item['engine'], item['url']))
+            pass
     return jkl
 
 
@@ -31,9 +37,13 @@ class Scrape:
         self.pairs = [
             {'name': "Bing", 'func': get_bing_results},
             {'name': "Duckduckgo", 'func': get_ddg_results},
-            {'name': "Yahoo", 'func': get_yahoo_results},
-            {'name': "YT", 'func': get_yt_results},
+            {'name': "Yahoo", 'func': get_yahoo_results}
         ]  # google will run non-threaded
+
+        if os_name == "Windows":
+            self.pairs.append({'name': "YT", 'func': get_yt_results})
+        elif os_name == "Linux":
+            print("You are running on Linux.")
 
     def get_all_results(self) -> list:
         """

@@ -66,12 +66,12 @@ def get_yt_results(query: str) -> list:
                         'channel_url': channel_url}
                 cards.append(card)
         driver.close()
-    except WebDriverException as e:
+    except (WebDriverException, NoSuchElementException) as e:
         print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
     return cards
 
 
-# HTML tree strcture
+# HTML tree structure
 # ----- div#contents. style-scope ytd-item-section-renderer style-scope ytd-item-section-renderer
 # ------ div#dismissible.style-scope ytd-video-renderer
 #

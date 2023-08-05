@@ -17,9 +17,11 @@ Search Nexus is a flask-based application that allows users to perform searches 
 
 **Note**: Make sure Chrome is your default browser. It helps. 
 
-## Demo
+## Screenshots
 
- [Will update]
+![Screenshot (36)](https://github.com/gv1shnu/SearchNexus/assets/121789146/17073fa0-8e88-452c-933e-1757428867e4)
+
+![Screenshot (35)](https://github.com/gv1shnu/SearchNexus/assets/121789146/510ca5c8-d454-4a5a-b0e6-3cf80c82933f)
 
 
 ## Installation

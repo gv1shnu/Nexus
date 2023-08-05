@@ -39,8 +39,10 @@ def is_valid_url(url: str) -> bool:
 
 def getSoup(url: str):
     header = get_header()
-    response = requests.get(url, headers=header).content
-    return BeautifulSoup(response, 'html.parser')
+    response = requests.get(url, headers=header)
+    if response.status_code == 200:
+        return BeautifulSoup(response.content, 'html.parser')
+    return None
 
 
 def get_url(q: str, base: str, t: str) -> str:
