@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from src.db_handler import DBHandler
 from flaskwebgui import FlaskUI
-from src.driver import driver
 import logging
 
 app = Flask(__name__)

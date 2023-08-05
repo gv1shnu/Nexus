@@ -6,11 +6,10 @@ from scr.bing import get_bing_results
 from scr.ddg import get_ddg_results
 from scr.yahoo import get_yahoo_results
 from scr.yt import get_yt_results
-import platform
-
-os_name = platform.system()
+from src.chr import chrome_installed
 
 
+# Removes duplicate URLs
 def preprocess(my_list: list) -> list:
     unique_urls = set()
     jkl = []
@@ -30,7 +29,7 @@ class Scrape:
             {'name': "Yahoo", 'func': get_yahoo_results}
         ]  # google will run non-threaded
 
-        if os_name == "Windows":
+        if chrome_installed:
             self.pairs.append(
                 {'name': "YT", 'func': get_yt_results}
             )
