@@ -1,7 +1,7 @@
 from src.db_handler import DBHandler
 
 
-def process(query, driver_service) -> list:
+def process(query: str, driver_service) -> list:
     """
     Processes a query by checking the search results database.
     Takes a query as input and checks the search results database using the DBHandler class.

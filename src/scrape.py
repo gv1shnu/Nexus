@@ -1,6 +1,8 @@
+import random
 import threading
 import requests
 from bs4 import BeautifulSoup
+from googlesearch import search
 from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
@@ -26,8 +28,13 @@ def is_valid_url(url) -> bool:
         return False
 
 
+def get_domain(url):
+    parsed_url = urlparse(url)
+    return parsed_url.netloc
+
+
 class Scrape:
-    def __init__(self, q, ds):
+    def __init__(self, q: str, ds):
         """
         Initializes the Scrape object.
 
@@ -36,13 +43,21 @@ class Scrape:
             ds (selenium.webdriver.chrome.service.Service): The pass along.
         """
         self.query = q
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/91.0.4472.124 Safari/537.36'
-        }
+        self.headers = None
+        self.user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/91.0.864.48 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/92.0.902.55 Safari/537.36'
+        ]
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless --no-sandbox --disable-dev-shm-usage --disable-gpu")
         self.driver_service = ds
+        self.assign_header()
         self.results = []
 
     def get_results(self) -> list:
@@ -54,12 +69,12 @@ class Scrape:
             list: A list of dictionaries representing the search results.
         """
         threads = [
-            threading.Thread(target=self.get_google_urls),
             threading.Thread(target=self.get_bing_urls),
             threading.Thread(target=self.get_yahoo_urls),
             threading.Thread(target=self.get_duckduckgo_urls),
             threading.Thread(target=self.get_youtube_urls)
         ]
+        self.get_google_urls()
         for thread in threads:
             thread.start()
         for thread in threads:
@@ -70,18 +85,10 @@ class Scrape:
         """
         Scrapes search results from Google.
         """
-        driver = webdriver.Chrome(service=self.driver_service, options=self.chrome_options)
-        key = self.get_url(base="https://www.google.com/", t="search?q")
-        driver.get(key)
-        _refs = []
-        links = driver.find_elements(By.CLASS_NAME, 'yuRUbf')
-        for link in links:
-            plink = link.find_element(By.TAG_NAME, 'a')
-            url = plink.get_attribute("href")
-            title = plink.find_element(By.TAG_NAME, 'h3').text
-            _refs.append({'title': title, 'url': url})
-        driver.close()
-        self.results.append({'engine': 'Google', 'results': _refs})
+        dips = search(self.query, advanced=True)
+        ans = [{'title': dip.title, 'url': dip.url, 'channel_name': get_domain(dip.url),
+                'channel_url': get_domain(dip.url), 'body': dip.description} for dip in dips]
+        self.results.append({'engine': 'Google', 'results': ans})
 
     def get_bing_urls(self) -> None:
         """
@@ -110,8 +117,10 @@ class Scrape:
                         unit['body'] = p_tag.text[3:]
 
                     if unit['title'] and unit['url']:
+                        unit['channel_name'] = get_domain(unit['url'])
+                        unit['channel_url'] = get_domain(unit['url'])
                         ans.append(unit)
-                self.results.append({'engine': 'Bing', 'results': list(ans)})
+            self.results.append({'engine': 'Bing', 'results': list(ans)})
         except NoSuchElementException:
             print('\033[0mBing. {}'.format(url))
 
@@ -145,6 +154,8 @@ class Scrape:
                             unit['body'] = p_element.find('span').text
 
                     if unit['title'] and unit['url']:
+                        unit['channel_name'] = get_domain(unit['title'])
+                        unit['channel_url'] = get_domain(unit['title'])
                         ans.append(unit)
 
             self.results.append({'engine': 'Yahoo', 'results': ans})
@@ -155,7 +166,8 @@ class Scrape:
         """
         Scrapes search results from DuckDuckGo.
         """
-        ans = [{'title': r['title'], 'url': r['href'], 'body': r['body']} for r in DDGS().text(self.query)]
+        ans = [{'title': r['title'], 'url': r['href'], 'channel_name': get_domain(r['href']),
+                'channel_url': get_domain(r['href']), 'body': r['body']} for r in DDGS().text(self.query)]
         self.results.append({'engine': 'Duckduckgo', 'results': ans})
 
     def get_youtube_urls(self) -> None:
@@ -201,6 +213,10 @@ class Scrape:
         except NoSuchElementException:
             print('\033[0mYT: {}'.format(url))
 
-    def get_url(self, base, t) -> str:
+    def get_url(self, base: str, t: str) -> str:
         x = "+".join(self.query.split(' '))
         return f"{base}{t}={x}"
+
+    def assign_header(self) -> None:
+        tmp = random.choice(self.user_agents)
+        self.headers = {'User-Agent': tmp}

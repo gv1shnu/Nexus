@@ -13,7 +13,7 @@ class DBHandler:
             os.mkdir('db')
         self.db = TinyDB('db/search_results_db.json')
 
-    def insert(self, req, ds) -> list:
+    def insert(self, req: str, ds) -> list:
         """
         Inserts a new entry into the search results database.
         Takes a request as input and driver service as pass-along parameter and
@@ -27,7 +27,7 @@ class DBHandler:
         print("\033[95m Null request")
         return []
 
-    def query(self, req) -> list:
+    def query(self, req: str) -> list:
         """
         Queries the search results database for a specific request.
         """

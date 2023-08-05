@@ -2,21 +2,10 @@
 
 Search Nexus is a flask-based application that allows users to perform searches across multiple search engines simultaneously and view the results in one place.
 
-## Table of Contents
-- [Features](#features)
-- [Usage](#usage)
-- [Screenshots](#screenshots)
-- [Installation](#installation)
-- [Technologies Used](#technologies-used)
-- [Limitations](#limitations)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## Features
 
 - Perform searches across multiple search engines simultaneously.
 - View search results from various search engines in one consolidated view.
-- Responsive design for a seamless experience on different devices.
 - Experimental in nature
 
 ## Usage
@@ -72,10 +61,11 @@ Follow these steps to set up and run the Search Nexus Flask application:
 
 - The search results may not always be consistent across different search engines due to variations in algorithms and indexing.
 - The application currently supports a predefined set of search engines and cannot dynamically add or remove search engines.
+- The application relies on the availability and performance of the search engines it queries.
 
 ## Contributing
 
-Contributions and code reviews are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request. Make sure to follow the existing coding style and conventions.
+Contributions and code reviews are welcome! 
 
 TODO
 ----
@@ -85,7 +75,7 @@ TODO
 - [ ] Add more search engines
 - [ ] Pagination
 - [ ] Change the background of success.html
-- [ ] Organize displayed search results more comprehensively
+- [ ] Organize displayed search results more comprehensively (card style)
 
 ## License
 
