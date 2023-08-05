@@ -23,7 +23,7 @@ Please view following demo in different formats.
 
 
 ### Video
-  Click [here](https://youtu.be/yyqwyAamiaQ) to watch the **latest** demo on YouTube.
+  Click [here](https://youtu.be/yyqwyAamiaQ) to watch old demo on YouTube.
 
 ### Homepage screenshot
 
@@ -73,13 +73,13 @@ Contributions and code reviews are welcome!
 
 TODO
 ----
-- [ ] Update the blurry icon
-- [ ] Order rank-wise
+- [ ] <s>Update the blurry icon</s>
+- [x] Order rank-wise
 - [x] Center the result-container div
 - [x] Properly scrape for YouTube video description again
-- [ ] Add more search engines
-- [ ] Pagination
-- [ ] Change the background of success.html
+- [ ] <s>Add more search engines</s>
+- [x] Pagination
+- [x] Change the background of success.html
 - [x] Organize displayed search results more comprehensively (card style)
 
 ## License

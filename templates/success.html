@@ -1,64 +1,76 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>{{ q }} - Search Nexus</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/success.css') }}" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
-        <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
-    </head>
-    <body>
-        <div id="result-container">
-            {% if result %}
-                <!-- Display search results -->
-                {% for entry in result %}
-                    <!-- Engine name -->
-                    <ul>
-                        {% if entry.results %}
-                            {% for result in entry.results %}
-                                <!-- Results -->
-                                <li>
-                                    <div class="card">
-                                        {% if result.title and result.url %}
-                                            <div style="display: flex; align-items: center;">
-                                                <div style="flex: 1;">
-                                                    <a href="{{ result.url }}">{{ result.title }}</a>
-                                                    <br>
-                                                    {% if result.channel_name and result.channel_url %}
-                                                        <!-- Channel info -->
-                                                        <a href="{{ result.channel_url }}">{{ result.channel_name }}</a>
-                                                    {% endif %}
-                                                </div>
-                                                <div style="text-align: right;">
-                                                    <p>{{ entry.engine }}</p>
-                                                </div>
-                                            </div>
-
-                                            {% if result.body %}
-                                                <!-- Snippet of the webpage -->
-                                                <p>{{ result.body }}</p>
-                                            {% endif %}
+<head>
+    <title>{{ q }} - Search Nexus</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/success.css') }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+</head>
+<body>
+    <div id="result-container">
+        {% if page %}
+            <ul>
+                {% for card in page %}
+                    <!-- Display search results -->
+                    <li>
+                        <div class="card">
+                            {% if card.title and card.url %}
+                                <div style="display: flex; align-items: center;">
+                                    <div style="flex: 1;">
+                                        <a href="{{ card.url }}">{{ card.title }}</a>
+                                        <br>
+                                        {% if card.channel_name and card.channel_url %}
+                                            <!-- Channel info -->
+                                            <a href="{{ card.channel_url }}">{{ card.channel_name }}</a>
                                         {% endif %}
                                     </div>
-                                </li>
-                            {% endfor %}
-                        {% else %}
-                            <!-- Display a message if no URLs found -->
-                            <p style="color: #f2f2f2;">Empty.</p>
-                        {% endif %}
-                    </ul>
-                {% endfor %}
-            {% else %}
-                <!-- Display a message if no results found -->
-                <p style="color: #fff">No results found.</p>
-            {% endif %}
-        </div>
+                                    <div style="text-align: right;">
+                                        <p>{{ card.engine }}</p>
+                                    </div>
+                                </div>
 
-        <!-- Display the execution time -->
-        <div class="execution-time">
-            {{ count }} results ({{ execution_time }} seconds)
-        </div>
-    </body>
+                                {% if card.body %}
+                                    <!-- Snippet of the webpage -->
+                                    <p>{{ card.body }}</p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <!-- Display a message if no results found -->
+            <p style="color: #fff">No results found.</p>
+        {% endif %}
+    </div>
+
+    <!-- Display stats -->
+    <div class="stats">
+        {{ count }} results ({{ execution_time }} seconds)
+    </div>
+
+    <!-- Pagination controls -->
+    <div class="pagination">
+        {% if total_pages > 1 %}
+            {% if current_page > 1 %}
+                <a href="{{ url_for('index', page=current_page - 1) }}">Previous</a>
+            {% endif %}
+
+            {% for page_num in range(1, total_pages + 1) %}
+                {% if page_num == current_page %}
+                    <a href="{{ url_for('index', page=page_num) }}" class="active">{{ page_num }}</a>
+                {% else %}
+                    <a href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if current_page < total_pages %}
+                <a href="{{ url_for('index', page=current_page + 1) }}">Next</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
 </html>

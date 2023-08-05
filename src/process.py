@@ -18,9 +18,9 @@ def process(query: str) -> tuple:
 
     if x:  # entry exists
         if get_diff_dates(date1=x['date'], date2=str(date.today())) >= 7:  # is older than a week
-            dbhandler.update(entry=x)
+            return dbhandler.update(entry=x)
         else:  # is fresh
-            return x['count'], x['time'], x['results']
+            return x['count'], x['time'], x['pages']
     else:
         print("\033[92m No entry found.\n Scraping...")
         return dbhandler.insert(req=query)

@@ -3,7 +3,7 @@ from src.helpers import get_domain
 import requests
 
 
-def get_res(query: str) -> list:
+def get_google_results(query: str) -> list:
     """
     Scrapes search results from Google.
 
@@ -12,10 +12,12 @@ def get_res(query: str) -> list:
 
     Returns: list of dictionaries
     """
-    ans = []
+    cards = []
+    engine_name = "Google"
     try:
         dips = search(query, advanced=True)
-        ans += [{
+        cards += [{
+            'engine': engine_name,
             'title': dip.title,
             'url': dip.url,
             'channel_name': get_domain(dip.url),
@@ -23,5 +25,5 @@ def get_res(query: str) -> list:
             'body': dip.description
         } for dip in dips]
     except requests.exceptions.HTTPError:
-        print("Too Many Requests\n")
-    return ans
+        print("{}-Too Many Requests\n".format(engine_name))
+    return cards

@@ -10,7 +10,7 @@ chrome_options = Options()
 chrome_options.add_argument("--headless --no-sandbox --disable-dev-shm-usage --disable-gpu")
 
 
-def get_res(query: str) -> list:
+def get_yt_results(query: str) -> list:
     """
     Scrapes search results from YouTube.
 
@@ -19,7 +19,8 @@ def get_res(query: str) -> list:
 
     Returns: a list of dictionaries
     """
-    ans = list()
+    engine_name = "YouTube"
+    cards = list()
     url = get_url(q=query, base="https://www.youtube.com/", t="results?search_query")
     try:
         driver = webdriver.Chrome(service=driver_service, options=chrome_options)
@@ -47,10 +48,10 @@ def get_res(query: str) -> list:
                     channel_name = k.text
                 if i >= 2:
                     break
-            unit = {'title': video_title, 'url': video_url, 'body': body, 'channel_name': channel_name,
+            unit = {'engine': engine_name, 'title': video_title, 'url': video_url, 'body': body, 'channel_name': channel_name,
                     'channel_url': channel_url}
-            ans.append(unit)
+            cards.append(unit)
         driver.close()
     except NoSuchElementException:
-        print('\033[0mYT: {}'.format(url))
-    return ans
+        print('\033[0m{}: {}'.format(engine_name, url))
+    return cards

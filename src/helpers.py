@@ -4,7 +4,16 @@ from urllib.parse import urlparse
 import random
 
 
-def get_domain(url: str):
+def get_domain(url: str) -> str:
+    """
+    Extracts the domain from a URL.
+
+    Args:
+        url (str): The URL to extract the domain from.
+
+    Returns:
+        str: The domain extracted from the URL.
+    """
     parsed_url = urlparse(url)
     return parsed_url.netloc
 
@@ -27,6 +36,17 @@ def is_valid_url(url: str) -> bool:
 
 
 def get_url(q: str, base: str, t: str) -> str:
+    """
+    Generates a URL for a given query, base URL, and query parameter.
+
+    Args:
+        q (str): The query string.
+        base (str): The base URL.
+        t (str): The query parameter.
+
+    Returns:
+        str: The generated URL.
+    """
     x = "+".join(q.split(' '))
     return f"{base}{t}={x}"
 
@@ -43,6 +63,12 @@ user_agents = [
 ]
 
 
-def get_header():
+def get_header() -> dict:
+    """
+    Generates a random User-Agent header.
+
+    Returns:
+        dict: The generated User-Agent header.
+    """
     tmp = random.choice(user_agents)
     return {'User-Agent': tmp}

@@ -3,7 +3,7 @@ from src.helpers import get_url, is_valid_url, get_header, get_domain
 from bs4 import BeautifulSoup
 
 
-def get_res(query: str) -> list:
+def get_yahoo_results(query: str) -> list:
     """
     Scrapes search results from Yahoo.
 
@@ -12,10 +12,11 @@ def get_res(query: str) -> list:
 
     Returns: a list of dictionaries
     """
+    engine_name = "Yahoo"
     base_url = get_url(q=query, base='https://search.yahoo.com/', t='search?q')
     header = get_header()
     response = requests.get(base_url, headers=header)
-    ans = list()
+    cards = list()
     try:
         soup = BeautifulSoup(response.content, 'html.parser')
         result_container = soup.find('ol', class_='reg searchCenterMiddle')
@@ -40,7 +41,8 @@ def get_res(query: str) -> list:
                 if unit['title'] and unit['url']:
                     unit['channel_name'] = get_domain(unit['title'])
                     unit['channel_url'] = get_domain(unit['title'])
-                    ans.append(unit)
+                    unit['engine'] = engine_name
+                    cards.append(unit)
     except Exception:
-        print('\033[0mYahoo. {}'.format(response.url))
-    return ans
+        print('\033[0m{}. {}'.format(engine_name, response.url))
+    return cards

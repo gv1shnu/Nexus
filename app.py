@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from src.process import process
 from flaskwebgui import FlaskUI
 from src.driver import driver_service
@@ -7,21 +7,42 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def index():
+def home():
     """
-    Renders the index.html template for the home page.
+        Renders the index.html template for the home page.
     """
     return render_template('index.html')
+
+
+global query, count, execution_time, pages
+
+
+@app.route('/index')
+def index():
+    """
+        Renders the search results page template for specified page.
+    """
+    page_number = int(request.args.get('page', 1))
+    _index = page_number - 1
+    if 0 <= _index < len(pages):
+        current_page = pages[_index]
+    else:
+        current_page = []
+    total_pages = len(pages)
+    return render_template('success.html', q=query, page=current_page,
+                           total_pages=total_pages, current_page=page_number, count=count,
+                           execution_time=execution_time)
 
 
 @app.route('/submit', methods=['POST'])
 def submit():
     """
-    Processes the user's query and returns the result to the submit page.
+        Processes the user's query and redirects to the search results page.
     """
+    global query, count, execution_time, pages
     query = request.form.get('q')
-    count, execution_time, result = process(query)
-    return render_template('success.html', q=query, result=result, count=count, execution_time=execution_time)
+    count, execution_time, pages = process(query)
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

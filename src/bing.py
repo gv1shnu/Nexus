@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from src.helpers import is_valid_url, get_domain, get_url, get_header
 
 
-def get_res(query: str) -> list:
+def get_bing_results(query: str) -> list:
     """
     Scrapes search results from Bing.
 
@@ -12,8 +12,9 @@ def get_res(query: str) -> list:
 
     Returns: list of dictionaries
     """
-    ans = list()
+    cards = list()
     url = get_url(q=query, base="https://www.bing.com/", t="search?q")
+    engine_name = "Bing"
     try:
         header = get_header()
         response = requests.get(url, headers=header).content
@@ -38,7 +39,8 @@ def get_res(query: str) -> list:
                 if unit['title'] and unit['url']:
                     unit['channel_name'] = get_domain(unit['url'])
                     unit['channel_url'] = get_domain(unit['url'])
-                    ans.append(unit)
+                    unit['engine'] = engine_name
+                    cards.append(unit)
     except Exception:
-        print('\033[0mBing. {}'.format(url))
-    return ans
+        print('\033[0m{}. {}'.format(engine_name, url))
+    return cards
