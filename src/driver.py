@@ -9,13 +9,14 @@ def initialise_driver():
     if not chrome_installed:
         return
 
+    # location specified according to yt.py's location
     if os_name == "Linux":
-        chrome_driver_path = "./cdr/chromedriver-linux64/chromedriver"
+        chrome_driver_path = "../cdr/chromedriver-linux64/chromedriver"
         chmod_command = f"chmod +x {chrome_driver_path}"
         subprocess.run(chmod_command, shell=True)
         headless = "--headless=chrome"
     else:
-        chrome_driver_path = "./cdr/chromedriver-win32/chromedriver.exe"
+        chrome_driver_path = "../cdr/chromedriver-win32/chromedriver.exe"
         headless = "--headless"
     try:
         service = Service(executable_path=chrome_driver_path)
