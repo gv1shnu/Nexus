@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from src.driver import driver_service
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, WebDriverException
 
 
 chrome_options = Options()
@@ -52,6 +52,6 @@ def get_yt_results(query: str) -> list:
                     'channel_url': channel_url}
             cards.append(unit)
         driver.close()
-    except NoSuchElementException:
+    except (NoSuchElementException, WebDriverException):
         print('\033[0m{}: {}'.format(engine_name, url))
     return cards
