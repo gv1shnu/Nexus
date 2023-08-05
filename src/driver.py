@@ -1,3 +1,4 @@
+import subprocess
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import ChromeOptions
@@ -8,10 +9,14 @@ def initialise_driver():
     if not chrome_installed:
         return
 
-    service = Service(executable_path='./cdr/chromedriver-linux64/chromedriver')
-    if os_name == "Windows":
-        service = Service(executable_path='./cdr/chromedriver-win32/chromedriver.exe')
+    if os_name == "Linux":
+        chrome_driver_path = "./cdr/chromedriver-linux64/chromedriver"
+        chmod_command = f"chmod +x {chrome_driver_path}"
+        subprocess.run(chmod_command, shell=True)
+    else:
+        chrome_driver_path = "./cdr/chromedriver-win32/chromedriver.exe"
     try:
+        service = Service(executable_path=chrome_driver_path)
         options = ChromeOptions()
         options.add_argument("--headless --no-sandbox --disable-dev-shm-usage --disable-gpu")
         _driver = webdriver.Chrome(service=service, options=options)
