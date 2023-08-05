@@ -24,6 +24,12 @@
                                     <li>
                                         {% if result.title and result.url %}
                                             <a href="{{ result.url }}">{{ result.title }}</a>
+                                            <br>
+                                            {% if result.channel_name and result.channel_url %}
+                                                <!-- YT Cannel info -->
+                                                <a href="{{ result.channel_url }}">{{ result.channel_name }}</a>
+                                            {% endif %}
+
                                             {% if result.body %}
                                                 <!-- Snippet of the webpage -->
                                                 <p>{{ result.body }}</p>

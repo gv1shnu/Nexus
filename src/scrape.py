@@ -1,13 +1,13 @@
 import threading
-import time
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 from googlesearch import search
 from duckduckgo_search import DDGS
 from urllib.parse import urlparse
+from selenium.webdriver.common.by import By
 
 
 def is_valid_url(url):
@@ -28,12 +28,13 @@ def is_valid_url(url):
 
 
 class Scrape:
-    def __init__(self, q):
+    def __init__(self, q, ds):
         """
         Initializes the Scrape object.
 
         Args:
             q (str): The search query.
+            ds (selenium.webdriver.chrome.service.Service): The pass along.
         """
         self.query = q
         self.headers = {
@@ -42,7 +43,7 @@ class Scrape:
         }
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless --no-sandbox --disable-dev-shm-usage --disable-gpu")
-        self.driver_service = webdriver.chrome.service.Service(ChromeDriverManager().install())
+        self.driver_service = ds
         self.results = []
 
     def get_results(self):
@@ -69,25 +70,20 @@ class Scrape:
     def get_google_urls(self):
         """
         Scrapes search results from Google.
-        Uses the `search` function from the `googlesearch` library to perform the search.
         """
         ans = list()
-        try:
-            dip = search(self.query, advanced=True)
-            for i in dip:
-                unit = {'title': i.title, 'url': i.url, 'body': i.description}
-                ans.append(unit)
-            self.results.append({'engine': 'Google', 'results': ans})
-        except Exception as e:
-            print('\033[0mGoogle:', str(e))
+        dips = search(self.query, advanced=True)
+        for dip in dips:
+            unit = {'title': dip.title, 'url': dip.url, 'body': dip.description}
+            ans.append(unit)
+        self.results.append({'engine': 'Google', 'results': ans})
 
     def get_bing_urls(self):
         """
         Scrapes search results from Bing.
         Sends a GET request to Bing with the query as a parameter.
         """
-        base, t = "https://www.bing.com/", "search?q"
-        url = f"{base}{t}={self.query}"
+        url = self.get_url(base="https://www.bing.com/", t="search?q")
         try:
             response = requests.get(url, headers=self.headers).content
             soup = BeautifulSoup(response, 'html.parser')
@@ -111,21 +107,16 @@ class Scrape:
                     if unit['title'] and unit['url']:
                         ans.append(unit)
                 self.results.append({'engine': 'Bing', 'results': list(ans)})
-        except Exception as e:
-            print('\033[0mBing:', str(e))
-            print(url)
+        except NoSuchElementException:
+            print('\033[0mBing. {}'.format(url))
 
     def get_yahoo_urls(self):
         """
         Scrapes search results from Yahoo.
         Sends a GET request to Yahoo with the query as a parameter.
         """
-        base_url = 'https://search.yahoo.com/search'
-        params = {
-            'q': self.query,
-            'b': '0',  # (0 for the first page)
-        }
-        response = requests.get(base_url, params=params)
+        base_url = self.get_url(base='https://search.yahoo.com/', t='search?q')
+        response = requests.get(base_url, headers=self.headers)
         try:
             soup = BeautifulSoup(response.content, 'html.parser')
             ans = list()
@@ -152,23 +143,18 @@ class Scrape:
                         ans.append(unit)
 
             self.results.append({'engine': 'Yahoo', 'results': ans})
-        except Exception as e:
-            print('\033[0mYahoo:', str(e))
-            print(response.url)
+        except NoSuchElementException:
+            print('\033[0mYahoo. {}'.format(response.url))
 
     def get_duckduckgo_urls(self):
         """
         Scrapes search results from DuckDuckGo.
-        Uses the `DDGS` class from the `duckduckgo_search` library to perform the search.
         """
         ans = list()
-        try:
-            for r in DDGS().text(self.query):
-                unit = {'title': r['title'], 'url': r['href'], 'body': r['body']}
-                ans.append(unit)
-            self.results.append({'engine': 'Duckduckgo', 'results': ans})
-        except Exception as e:
-            print('\033[0mDDG:', str(e))
+        for r in DDGS().text(self.query):
+            unit = {'title': r['title'], 'url': r['href'], 'body': r['body']}
+            ans.append(unit)
+        self.results.append({'engine': 'Duckduckgo', 'results': ans})
 
     def get_youtube_urls(self):
         """
@@ -176,29 +162,44 @@ class Scrape:
         Uses Selenium WebDriver to simulate a browser and perform the search.
         """
         ans = list()
-        base, t = "https://www.youtube.com/", "results?search_query"
-        x = "+".join(self.query.split(' '))
-        url = f"{base}{t}={x}"
+        url = self.get_url(base="https://www.youtube.com/", t="results?search_query")
         try:
             driver = webdriver.Chrome(service=self.driver_service, options=self.chrome_options)
             driver.get(url)
-            common_path = "/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/"
 
-            for _ in range(3):  # Scroll down three times to load more videos
-                driver.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
-                time.sleep(2)
+            elem = driver.find_element(By.ID, 'contents')
+            children_elems = elem.find_elements(By.CSS_SELECTOR, 'ytd-video-renderer')  # blocks
+            for child in children_elems:
+                nested_child = child.find_element(By.ID, 'dismissible')
+                yf = nested_child.find_elements(By.CSS_SELECTOR, "yt-formatted-string")
+                body = ""
+                for i in yf:
+                    if 'metadata' in i.get_attribute('class'):
+                        body += i.text
+                video_url, video_title, channel_url, channel_name = "", "", "", ""
+                yf_url = nested_child.find_elements(By.TAG_NAME, 'a')
+                i = 0
+                for k in yf_url:
+                    if k.text:
+                        i += 1
+                        if i == 2:
+                            channel_url = k.get_attribute('href')
+                            channel_name = k.text
+                        elif i == 1:
+                            video_url = k.get_attribute('href')
+                            video_title = k.text
+                        else:
+                            pass
+                    else:
+                        pass
 
-            for i in range(1, 21):
-                f = common_path + f"ytd-video-renderer[{str(i)}]/div[1]/div/div[1]/div/h3/a"
-                divs = driver.find_element("xpath", f)
-
-                time.sleep(3)
-                g = common_path + f"ytd-video-renderer[{str(i)}]/div[1]/div/div[3]/a/yt-formatted-string"
-                t_divs = driver.find_element("xpath", g)
-
-                unit = {'title': divs.text, 'url': divs.get_attribute('href'), 'body': t_divs.text}
+                unit = {'title': video_title, 'url': video_url, 'body': body, 'channel_name': channel_name, 'channel_url': channel_url}
                 ans.append(unit)
             self.results.append({'engine': 'YouTube', 'results': ans})
-        except Exception as e:
-            print('\033[0mYT:', str(e))
-            print(url)
+        except NoSuchElementException:
+            print('\033[0mYT: {}'.format(url))
+
+    def get_url(self, base, t):
+        x = "+".join(self.query.split(' '))
+        return f"{base}{t}={x}"
+
