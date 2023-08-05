@@ -9,6 +9,10 @@ body {
     min-height: 100vh;
 }
 
+p{
+    color: #FFF;
+}
+
 /* Styling for heading 3 elements */
 h3 {
     color: #fff;

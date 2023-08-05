@@ -13,31 +13,38 @@
         <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
     </head>
     <body>
-        {% if result %}
-            <!-- Display search results -->
-            <div id="result">
-                {% for entry in result %}
-                    <!-- Engine name -->
-                    <h3>{{ entry.engine }}</h3>
-                    <ul>
-                        {% if entry.urls %}
-                            {% for url in entry.urls %}
-                                <!-- Result URLs -->
-                                <li>
-                                    <a href="{{ url[1] }}">{{ url[0] }}</a>
-                                </li>
-                            {% endfor %}
-                        {% else %}
-                            <!-- Display a message if no URLs found -->
-                            <p style="color: #f2f2f2;">Empty.</p>
-                        {% endif %}
-                    </ul>
-                {% endfor %}
-            </div>
-        {% else %}
-            <!-- Display a message if no results found -->
-            <p style="color: #fff">No results found.</p>
-        {% endif %}
+        <div id="result-container">
+            {% if result %}
+                <!-- Display search results -->
+                <div id="result">
+                    {% for entry in result %}
+                        <!-- Engine name -->
+                        <h3>{{ entry.engine }}</h3>
+                        <ul>
+                            {% if entry.results %}
+                                {% for result in entry.results %}
+                                    <!-- Results -->
+                                    <li>
+                                        <a href="{{ result.url }}">{{ result.title }}</a>
+                                        {% if result.body %}
+                                            <!-- Snippet of the webpage -->
+                                            <p>{{ result.body }}</p>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <!-- Display a message if no URLs found -->
+                                <p style="color: #f2f2f2;">Empty.</p>
+                            {% endif %}
+                        </ul>
+                    <hr>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Display a message if no results found -->
+                <p style="color: #fff">No results found.</p>
+            {% endif %}
+        </div>
 
         <!-- Display the execution time -->
         <div class="execution-time">

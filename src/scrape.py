@@ -1,4 +1,5 @@
 import threading
+import time
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -73,12 +74,15 @@ class Scrape:
         Scrapes search results from Google.
 
         Uses the `search` function from the `googlesearch` library to perform the search.
-        Extracts the title and URL for each result and adds them to the results list.
+        Extracts the title, URL and description for each result and adds them to the results list.
         """
+        ans = list()
         try:
-            x = search(self.query, advanced=True)
-            urls = [(i.title, i.url) for i in x]
-            self.results.append({'engine': 'Google', 'urls': list(set(urls))})
+            dip = search(self.query, advanced=True)
+            for i in dip:
+                unit = {'title': i.title, 'url': i.url, 'body': i.description}
+                ans.append(unit)
+            self.results.append({'engine': 'Google', 'results': ans})
         except Exception as e:
             print('\033[0mGoogle:', str(e))
 
@@ -87,7 +91,7 @@ class Scrape:
         Scrapes search results from Bing.
 
         Sends a GET request to Bing with the query as a parameter.
-        Extracts the title and URL for each result and adds them to the results list.
+        Extracts the title, URL and description for each result and adds them to the results list.
         """
         base, t = "https://www.bing.com/", "search?q"
         url = f"{base}{t}={self.query}"
@@ -99,15 +103,21 @@ class Scrape:
             if data1:
                 data2 = data1.find_all("li")
                 for li in data2:
+                    unit = {'title': None, 'url': None, 'body': None}
                     h2_element = li.find('h2')
+                    caption = li.find('div', class_="b_caption")
                     if h2_element:
                         anchor_tag = h2_element.find('a')
                         if anchor_tag:
-                            title = h2_element.text
-                            url = anchor_tag['href']
-                            if is_valid_url(url):
-                                ans.append((title, url))
-                self.results.append({'engine': 'Bing', 'urls': list(set(ans))})
+                            if is_valid_url(anchor_tag['href']):
+                                unit['title'], unit['url'] = h2_element.text, anchor_tag['href']
+                    if caption:
+                        p_tag = caption.find('p')
+                        unit['body'] = p_tag.text[3:]
+
+                    if unit['title'] and unit['url']:
+                        ans.append(unit)
+                self.results.append({'engine': 'Bing', 'results': list(ans)})
         except Exception as e:
             print('\033[0mBing:', str(e))
             print(url)
@@ -117,7 +127,7 @@ class Scrape:
         Scrapes search results from Yahoo.
 
         Sends a GET request to Yahoo with the query as a parameter.
-        Extracts the title and URL for each result and adds them to the results list.
+        Extracts the  title, URL and description for each result and adds them to the results list.
         """
         base_url = 'https://search.yahoo.com/search'
         params = {
@@ -127,21 +137,30 @@ class Scrape:
         response = requests.get(base_url, params=params)
         try:
             soup = BeautifulSoup(response.content, 'html.parser')
-            results = []
+            ans = list()
             result_container = soup.find('ol', class_='reg searchCenterMiddle')
             if result_container:
                 for li in result_container.find_all('li'):
-                    div = li.find('div')
+                    unit = {'title': None, 'url': None, 'body': None}
+                    div = li.find('div', class_="compTitle options-toggle")
                     if div:
                         h3 = div.find('h3')
                         if h3:
                             anchor_tag = h3.find('a')
                             if anchor_tag:
-                                title = anchor_tag.get_text(strip=True)
-                                url = anchor_tag['href']
-                                if is_valid_url(url):
-                                    results.append((title, url))
-            self.results.append({'engine': 'Yahoo', 'urls': list(set(results))})
+                                unit['title'] = anchor_tag.get_text(strip=True)
+                                if is_valid_url(anchor_tag['href']):
+                                    unit['url'] = anchor_tag['href']
+                    p_div = li.find('div', class_="compText aAbs")
+                    if p_div:
+                        p_element = p_div.find('p')
+                        if p_element:
+                            unit['body'] = p_element.find('span').text
+
+                    if unit['title'] and unit['url']:
+                        ans.append(unit)
+
+            self.results.append({'engine': 'Yahoo', 'results': ans})
         except Exception as e:
             print('\033[0mYahoo:', str(e))
             print(response.url)
@@ -151,11 +170,14 @@ class Scrape:
         Scrapes search results from DuckDuckGo.
 
         Uses the `DDGS` class from the `duckduckgo_search` library to perform the search.
-        Extracts the title and URL for each result and adds them to the results list.
+        Extracts the title, URL and description for each result and adds them to the results list.
         """
+        ans = list()
         try:
-            ans = [(r['title'], r['href']) for r in DDGS().text(self.query)]
-            self.results.append({'engine': 'Duckduckgo', 'urls': ans})
+            for r in DDGS().text(self.query):
+                unit = {'title': r['title'], 'url': r['href'], 'body': r['body']}
+                ans.append(unit)
+            self.results.append({'engine': 'Duckduckgo', 'results': ans})
         except Exception as e:
             print('\033[0mDDG:', str(e))
 
@@ -164,9 +186,9 @@ class Scrape:
         Scrapes search results from YouTube.
 
         Uses Selenium WebDriver to simulate a browser and perform the search.
-        Extracts the title and URL for each result and adds them to the results list.
+        Extracts the title, URL and description for each result and adds them to the results list.
         """
-        res = list()
+        ans = list()
         base, t = "https://www.youtube.com/", "results?search_query"
         x = "+".join(self.query.split(' '))
         url = f"{base}{t}={x}"
@@ -174,11 +196,22 @@ class Scrape:
             driver = webdriver.Chrome(service=self.driver_service, options=self.chrome_options)
             driver.get(url)
             common_path = "/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/"
-            for i in range(1, 16):
-                f = common_path + "ytd-video-renderer[" + str(i) + "]/div[1]/div/div[1]/div/h3/a"
+
+            for _ in range(3):  # Scroll down three times to load more videos
+                driver.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
+                time.sleep(2)
+
+            for i in range(1, 21):
+                f = common_path + f"ytd-video-renderer[{str(i)}]/div[1]/div/div[1]/div/h3/a"
                 divs = driver.find_element("xpath", f)
-                res.append((divs.text, divs.get_attribute('href')))
-            self.results.append({'engine': 'YouTube', 'urls': list(set(res))})
+
+                time.sleep(3)
+                g = common_path + f"ytd-video-renderer[{str(i)}]/div[1]/div/div[3]/a/yt-formatted-string"
+                t_divs = driver.find_element("xpath", g)
+
+                unit = {'title': divs.text, 'url': divs.get_attribute('href'), 'body': t_divs.text}
+                ans.append(unit)
+            self.results.append({'engine': 'YouTube', 'results': ans})
         except Exception as e:
             print('\033[0mYT:', str(e))
             print(url)
