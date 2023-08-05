@@ -1,8 +1,9 @@
 from src.db_handler import DBHandler
 from datetime import date
+import selenium
 
 
-def process(query: str, driver_service) -> list:
+def process(query: str, driver_service: selenium.webdriver.chrome.service.Service) -> list:
     """
     Processes a query by checking the search results database.
     Takes a query as input and checks the search results database using the DBHandler class.
@@ -23,8 +24,9 @@ def process(query: str, driver_service) -> list:
         else:  # is fresh
             return x['results']
     else:
-        print("\033[92m No entry found.\n Scraping...\033[92m")
+        print("\033[92m No entry found.\n Scraping...")
         y = dbhandler.insert(req=query, ds=driver_service)
+        print("\033[92mDone")
         return y
 
 

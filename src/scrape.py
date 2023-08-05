@@ -3,6 +3,7 @@ import threading
 import requests
 from bs4 import BeautifulSoup
 from googlesearch import search
+import selenium
 from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
@@ -11,7 +12,7 @@ from urllib.parse import urlparse
 from selenium.webdriver.common.by import By
 
 
-def is_valid_url(url) -> bool:
+def is_valid_url(url: str) -> bool:
     """
     Checks if a URL is valid.
 
@@ -28,13 +29,13 @@ def is_valid_url(url) -> bool:
         return False
 
 
-def get_domain(url):
+def get_domain(url: str):
     parsed_url = urlparse(url)
     return parsed_url.netloc
 
 
 class Scrape:
-    def __init__(self, q: str, ds):
+    def __init__(self, q: str, ds: selenium.webdriver.chrome.service.Service):
         """
         Initializes the Scrape object.
 
@@ -85,9 +86,13 @@ class Scrape:
         """
         Scrapes search results from Google.
         """
-        dips = search(self.query, advanced=True)
-        ans = [{'title': dip.title, 'url': dip.url, 'channel_name': get_domain(dip.url),
-                'channel_url': get_domain(dip.url), 'body': dip.description} for dip in dips]
+        ans = []
+        try:
+            dips = search(self.query, advanced=True)
+            ans += [{'title': dip.title, 'url': dip.url, 'channel_name': get_domain(dip.url),
+                    'channel_url': get_domain(dip.url), 'body': dip.description} for dip in dips]
+        except requests.exceptions.HTTPError:
+            print("Too Many Requests\n")
         self.results.append({'engine': 'Google', 'results': ans})
 
     def get_bing_urls(self) -> None:
@@ -121,7 +126,7 @@ class Scrape:
                         unit['channel_name'] = get_domain(unit['url'])
                         unit['channel_url'] = get_domain(unit['url'])
                         ans.append(unit)
-            self.results.append({'engine': 'Bing', 'results': list(ans)})
+            self.results.append({'engine': 'Bing', 'results': ans})
         except NoSuchElementException:
             print('\033[0mBing. {}'.format(url))
 
@@ -192,20 +197,19 @@ class Scrape:
                         body += i.text
                 video_url, video_title, channel_url, channel_name = "", "", "", ""
                 yf_url = nested_child.find_elements(By.TAG_NAME, 'a')
-                i = 0
-                for k in yf_url:
-                    if k.text:
-                        i += 1
-                        if i == 2:
-                            channel_url = k.get_attribute('href')
-                            channel_name = k.text
-                        elif i == 1:
-                            video_url = k.get_attribute('href')
-                            video_title = k.text
-                        else:
-                            pass
-                    else:
-                        pass
+
+                for i, k in enumerate(yf_url):
+                    if not k.text:
+                        continue
+                    if i == 1:
+                        video_url = k.get_attribute('href')
+                        video_title = k.text
+                    elif i == 2:
+                        channel_url = k.get_attribute('href')
+                        channel_name = k.text
+                    if i >= 2:
+                        break
+
                 unit = {'title': video_title, 'url': video_url, 'body': body, 'channel_name': channel_name,
                         'channel_url': channel_url}
                 ans.append(unit)

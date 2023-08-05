@@ -13,38 +13,45 @@
         <div id="result-container">
             {% if result %}
                 <!-- Display search results -->
-                <div id="result">
-                    {% for entry in result %}
-                        <!-- Engine name -->
-                        <h3>{{ entry.engine }}</h3>
-                        <ul>
-                            {% if entry.results %}
-                                {% for result in entry.results %}
-                                    <!-- Results -->
-                                    <li>
+                {% for entry in result %}
+                    <!-- Engine name -->
+                    <ul>
+                        {% if entry.results %}
+                            {% for result in entry.results %}
+                                <!-- Results -->
+                                <li>
+                                    <div class="card">
                                         {% if result.title and result.url %}
-                                            <a href="{{ result.url }}">{{ result.title }}</a>
-                                            <br>
-                                            {% if result.channel_name and result.channel_url %}
-                                                <!-- YT Cannel info -->
-                                                <a href="{{ result.channel_url }}">{{ result.channel_name }}</a>
-                                            {% endif %}
+                                            <div style="display: flex; align-items: center;">
+                                                <div style="flex: 1;">
+                                                    <a href="{{ result.url }}">{{ result.title }}</a>
+                                                    <br>
+                                                    {% if result.channel_name and result.channel_url %}
+                                                        <!-- Channel info -->
+                                                        <a href="{{ result.channel_url }}">{{ result.channel_name }}</a>
+                                                    {% endif %}
+                                                </div>
+                                                <div style="text-align: right;">
+                                                    <p>{{ entry.engine }}</p>
+                                                </div>
+                                            </div>
 
                                             {% if result.body %}
                                                 <!-- Snippet of the webpage -->
                                                 <p>{{ result.body }}</p>
                                             {% endif %}
                                         {% endif %}
-                                    </li>
-                                {% endfor %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        <!--
                             {% else %}
-                                <!-- Display a message if no URLs found -->
+                                Display a message if no URLs found
                                 <p style="color: #f2f2f2;">Empty.</p>
                             {% endif %}
-                        </ul>
-                    <hr>
-                    {% endfor %}
-                </div>
+                        -->
+                    </ul>
+                {% endfor %}
             {% else %}
                 <!-- Display a message if no results found -->
                 <p style="color: #fff">No results found.</p>
@@ -53,7 +60,7 @@
 
         <!-- Display the execution time -->
         <div class="execution-time">
-            Execution Time: {{ execution_time }} seconds
+            Processing Time: {{ execution_time }} seconds
         </div>
     </body>
 </html>
