@@ -3,14 +3,6 @@ from scr.helpers import get_domain
 
 
 def get_ddg_results(query: str) -> list:
-    """
-    Scrapes search results from Duckduckgo.
-
-    Args:
-        query (str): the search query
-
-    Returns: a list of dictionaries
-    """
     engine_name = "Duckduckgo"
     cards = [{
         'engine': engine_name,

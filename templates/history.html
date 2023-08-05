@@ -12,27 +12,25 @@
     <body>
         <div id="history-container">
             {% if page %}
-                <ul>
+                <table>
+                    <tr>
+                        <th><p>Date</p></th>
+                        <th><p>Timestamp</p></th>
+                        <th><p>Query</p></th>
+                    </tr>
                     {% for item in page %}
-                        <!-- Display search results -->
-                        <li>
-                            <div class="card">
-                                {% if item %}
-                                    <a href="{{ url_for('submit', q=item.query) }}">
-                                        {{ item.date }} - {{ item.timestamp }} - {{ item.query }}
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </li>
+                        <tr>
+                            <td><p>{{ item.date }}</p></td>
+                            <td><p>{{ item.timestamp }}</p></td>
+                            <td><a href="{{ url_for('submit', q=item.query) }}">{{ item.query }}</a></td>
+                        </tr>
                     {% endfor %}
-                </ul>
+                </table>
             {% else %}
-                <!-- Display a message if no results found -->
                 <p style="color: #fff">No results found.</p>
             {% endif %}
         </div>
 
-        <!-- Pagination controls -->
         <div class="pagination">
             {% if total_pages > 1 %}
                 {% if current_page > 1 %}

@@ -14,43 +14,41 @@
             {% if page %}
                 <ul>
                     {% for card in page %}
-                        <!-- Display search results -->
                         <li>
-                            {% if card.title and card.url %}
-                                <div class="card">
-                                    <div style="flex: 1;">
-                                        <a href="{{ card.url }}">{{ card.title }}</a>
-                                        <br>
-                                        {% if card.channel_name and card.channel_url %}
-                                            <!-- Channel info -->
-                                            <a href="{{ card.channel_url }}">{{ card.channel_name }}</a>
-                                        {% endif %}
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <p>{{ card.engine }}</p>
+                            <div class="card">
+                                {% if card.title and card.url %}
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="flex: 1;">
+                                            <a href="{{ card.url }}">{{ card.title }}</a>
+                                            <br>
+                                            {% if card.channel_name and card.channel_url %}
+                                                <a href="{{ card.channel_url }}">{{ card.channel_name }}</a>
+                                            {% endif %}
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <p>{{ card.engine }}</p>
+                                        </div>
                                     </div>
 
-                                    {% if card.body %}
-                                        <!-- Snippet of the webpage -->
-                                        <p>{{ card.body }}</p>
-                                    {% endif %}
-                            {% endif %}
+                                    <div style="display: flex; align-items: center;">
+                                        {% if card.body %}
+                                            <p>{{ card.body }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <!-- Display a message if no results found -->
                 <p style="color: #fff">No results found.</p>
             {% endif %}
         </div>
 
-        <!-- Display stats -->
         <div class="stats">
             {{ count }} results ({{ execution_time }} seconds)
         </div>
 
-        <!-- Pagination controls -->
         <div class="pagination">
             {% if total_pages > 1 %}
                 {% if current_page > 1 %}

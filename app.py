@@ -14,9 +14,6 @@ app.logger.disabled = True
 
 @app.route('/')
 def home():
-    """
-        Renders the index.html template for the home page.
-    """
     return render_template('index.html')
 
 
@@ -24,9 +21,6 @@ global query, count, execution_time, pages, query_pages
 
 
 def get_current_page(page_number: int, data_list: list) -> list:
-    """
-        Get the current page based on the given page number and data list.
-    """
     _index = page_number - 1
     if 0 <= _index < len(data_list):
         current_page = data_list[_index]
@@ -37,9 +31,6 @@ def get_current_page(page_number: int, data_list: list) -> list:
 
 @app.route('/index')
 def index():
-    """
-        Renders the search results page template for the specified page.
-    """
     page_number = int(request.args.get('page', 1))
     current_page = get_current_page(page_number, pages)
     return render_template('success.html', q=query, page=current_page,
@@ -57,9 +48,6 @@ def navigate():
 
 @app.route('/history')
 def history():
-    """
-        Renders the history.html template for the history page.
-    """
     global query_pages
     dbhandler = DBHandler()
     query_pages = dbhandler.get_queries()
@@ -68,9 +56,6 @@ def history():
 
 @app.route('/submit', methods=['GET'])
 def submit():
-    """
-        Processes the user's query and redirects to the search results page.
-    """
     global query, count, execution_time, pages
     query = request.args.get('q')
     dbhandler = DBHandler()

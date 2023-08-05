@@ -1,20 +1,12 @@
-from scr.helpers import get_url, is_valid_url, get_domain, getSoup
+from scr.helpers import get_url, is_valid_url, get_domain, get_soup
 
 
 def get_yahoo_results(query: str) -> list:
-    """
-    Scrapes search results from Yahoo.
-
-    Args:
-        query (str): the search query
-
-    Returns: a list of dictionaries
-    """
     engine_name = "Yahoo"
     url = get_url(q=query, base='https://search.yahoo.com/', t='search?q')
     cards = list()
     try:
-        soup = getSoup(url)
+        soup = get_soup(url)
         if soup:
             ol = soup.find('ol', class_=lambda lmb: lmb and 'searchCenterMiddle' in lmb)
             if ol:

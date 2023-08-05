@@ -1,20 +1,12 @@
-from scr.helpers import is_valid_url, get_domain, get_url, getSoup
+from scr.helpers import is_valid_url, get_domain, get_url, get_soup
 
 
 def get_bing_results(query: str) -> list:
-    """
-    Scrapes search results from Bing.
-
-    Args:
-        query (str): the search query
-
-    Returns: list of dictionaries
-    """
     cards = list()
     url = get_url(q=query, base="https://www.bing.com/", t="search?q")
     engine_name = "Bing"
     try:
-        soup = getSoup(url)
+        soup = get_soup(url)
         if soup:
             data1 = soup.find('div', id="b_content")
             if data1:

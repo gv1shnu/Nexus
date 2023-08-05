@@ -5,14 +5,6 @@ from selenium.common import NoSuchElementException, WebDriverException
 
 
 def get_yt_results(query: str) -> list:
-    """
-    Scrapes search results from YouTube.
-
-    Args:
-        query (str): the search query.
-
-    Returns: a list of dictionaries
-    """
     engine_name = "YouTube"
     cards = list()
     url = get_url(q=query, base="https://www.youtube.com/", t="results?search_query")

@@ -4,14 +4,6 @@ import requests
 
 
 def get_google_results(query: str) -> list:
-    """
-    Scrapes search results from Google.
-
-    Args:
-        query (str): The search query
-
-    Returns: list of dictionaries
-    """
     cards = []
     engine_name = "Google"
     try:
