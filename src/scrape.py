@@ -23,6 +23,7 @@ def preprocess(my_list: list) -> list:
 
 class Scrape:
     def __init__(self, q: str):
+        self.pairs = []
         self.query, self.results = q, []
         self.pairs = [
             {'name': "Bing", 'func': get_bing_results},

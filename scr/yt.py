@@ -1,6 +1,6 @@
 from scr.helpers import get_url
 from selenium.webdriver.common.by import By
-from src.driver import driver_service
+from src.driver import driver
 from selenium.common import NoSuchElementException, WebDriverException
 
 
@@ -9,8 +9,8 @@ def get_yt_results(query: str) -> list:
     cards = list()
     url = get_url(q=query, base="https://www.youtube.com/", t="results?search_query")
     try:
-        driver_service.get(url)
-        elem = driver_service.find_element(By.ID, 'contents')
+        driver.get(url)
+        elem = driver.find_element(By.ID, 'contents')
         children_elems = elem.find_elements(By.ID, 'dismissible')
         for child in children_elems:
             if child:
@@ -46,14 +46,15 @@ def get_yt_results(query: str) -> list:
                 except NoSuchElementException:
                     pass
 
-                card = {'engine': engine_name, 'title': video_title, 'url': video_url,
-                        'body': body, 'channel_name': channel_name,
-                        'channel_url': channel_url}
-                cards.append(card)
-        driver_service.close()
+                if video_url and video_title:
+                    card = {'engine': engine_name, 'title': video_title, 'url': video_url,
+                            'body': body, 'channel_name': channel_name,
+                            'channel_url': channel_url}
+                    cards.append(card)
+        driver.close()
     except (WebDriverException, NoSuchElementException) as e:
         print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
-    driver_service.quit()
+    driver.quit()
     return cards
 
 

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from src.db_handler import DBHandler
 from flaskwebgui import FlaskUI
-from src.driver import driver_service
+from src.driver import driver
 import logging
 
 app = Flask(__name__)
@@ -64,6 +64,4 @@ def submit():
 
 
 if __name__ == '__main__':
-    ui = FlaskUI(app=app, server="flask", port=8080,
-                 on_shutdown=driver_service.quit())
-    ui.run()
+    ui = FlaskUI(app=app, server="flask", port=8080).run()
