@@ -16,27 +16,25 @@
                     {% for card in page %}
                         <!-- Display search results -->
                         <li>
-                            <div class="card">
-                                {% if card.title and card.url %}
-                                    <div style="display: flex; align-items: center;">
-                                        <div style="flex: 1;">
-                                            <a href="{{ card.url }}">{{ card.title }}</a>
-                                            <br>
-                                            {% if card.channel_name and card.channel_url %}
-                                                <!-- Channel info -->
-                                                <a href="{{ card.channel_url }}">{{ card.channel_name }}</a>
-                                            {% endif %}
-                                        </div>
-                                        <div style="text-align: right;">
-                                            <p>{{ card.engine }}</p>
-                                        </div>
+                            {% if card.title and card.url %}
+                                <div class="card">
+                                    <div style="flex: 1;">
+                                        <a href="{{ card.url }}">{{ card.title }}</a>
+                                        <br>
+                                        {% if card.channel_name and card.channel_url %}
+                                            <!-- Channel info -->
+                                            <a href="{{ card.channel_url }}">{{ card.channel_name }}</a>
+                                        {% endif %}
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <p>{{ card.engine }}</p>
                                     </div>
 
                                     {% if card.body %}
                                         <!-- Snippet of the webpage -->
                                         <p>{{ card.body }}</p>
                                     {% endif %}
-                                {% endif %}
+                            {% endif %}
                             </div>
                         </li>
                     {% endfor %}

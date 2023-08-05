@@ -13,12 +13,14 @@
         <div id="history-container">
             {% if page %}
                 <ul>
-                    {% for query in page %}
+                    {% for item in page %}
                         <!-- Display search results -->
                         <li>
                             <div class="card">
-                                {% if query %}
-                                    <a href="{{ url_for('submit', q=query[1]) }}">{{ query[0] }} - {{ query[1] }}</a>
+                                {% if item %}
+                                    <a href="{{ url_for('submit', q=item.query) }}">
+                                        {{ item.date }} - {{ item.timestamp }} - {{ item.query }}
+                                    </a>
                                 {% endif %}
                             </div>
                         </li>

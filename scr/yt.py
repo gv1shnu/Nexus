@@ -63,8 +63,12 @@ def get_yt_results(query: str) -> list:
         driver.close()
     except (WebDriverException, NoSuchElementException) as e:
         print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
+    driver_service.quit()
     return cards
 
+
+# if __name__ == '__main__':
+#     results = get_yt_results('ios v android')
 
 # HTML tree structure
 # ----- div#contents. style-scope ytd-item-section-renderer style-scope ytd-item-section-renderer
@@ -83,5 +87,3 @@ def get_yt_results(query: str) -> list:
 #
 # -------- div.metadata-snippet-container style-scope ytd-video-renderer style-scope ytd-video-renderer
 # --------- (span elements contain the description)
-
-

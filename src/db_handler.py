@@ -3,7 +3,7 @@ import os
 import time
 from tinydb import TinyDB, Query
 from src.scrape import Scrape
-from datetime import date
+from datetime import date, datetime
 
 
 def is_entry_old(entry_date: str) -> bool:
@@ -73,11 +73,13 @@ class DBHandler:
         pages = self.pagify(results)
         end_time = time.time()
         timer = round((end_time - start_time), 2)
+        current_time = datetime.now()
         return {'query': req,
                 'count': len(results),
                 'time': timer,
                 'date': str(date.today()),
-                'pages': pages
+                'pages': pages,
+                'timestamp': f"{current_time.hour}:{current_time.minute}"
                 }
 
     def get(self, query: str) -> tuple:
@@ -94,7 +96,8 @@ class DBHandler:
         with open(self.db_path, 'r') as file:
             data = json.load(file)
             data = data['_default']
-            return self.pagify([(key, data[key]['query']) for key in reversed(list(data.keys()))])
+            return self.pagify([{'date': data[key]['date'], 'timestamp': data[key]['timestamp'], 'query': data[key]['query']}
+                                for key in reversed(list(data.keys()))])
 
     def insert(self, req: str) -> tuple:
         """

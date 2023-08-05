@@ -2,8 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for
 from src.db_handler import DBHandler
 from flaskwebgui import FlaskUI
 from src.driver import driver_service
+import logging
 
 app = Flask(__name__)
+app.debug = False
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+log.disabled = True
+app.logger.disabled = True
 
 
 @app.route('/')
@@ -17,30 +23,34 @@ def home():
 global query, count, execution_time, pages, query_pages
 
 
+def get_current_page(page_number: int, data_list: list) -> list:
+    """
+        Get the current page based on the given page number and data list.
+    """
+    _index = page_number - 1
+    if 0 <= _index < len(data_list):
+        current_page = data_list[_index]
+    else:
+        current_page = []
+    return current_page
+
+
 @app.route('/index')
 def index():
     """
-        Renders the search results page template for specified page.
+        Renders the search results page template for the specified page.
     """
     page_number = int(request.args.get('page', 1))
-    _index = page_number - 1
-    if 0 <= _index < len(pages):
-        current_page = pages[_index]
-    else:
-        current_page = []
+    current_page = get_current_page(page_number, pages)
     return render_template('success.html', q=query, page=current_page,
-                           total_pages=len(pages), current_page=page_number, count=count,
-                           execution_time=execution_time)
+                           total_pages=len(pages), current_page=page_number,
+                           count=count, execution_time=execution_time)
 
 
 @app.route('/navigate')
 def navigate():
     page_number = int(request.args.get('page', 1) or 1)
-    _index = page_number - 1
-    if 0 <= _index < len(query_pages):
-        current_page = query_pages[_index]
-    else:
-        current_page = []
+    current_page = get_current_page(page_number, query_pages)
     return render_template('history.html', page=current_page,
                            current_page=page_number, total_pages=len(query_pages))
 
@@ -56,26 +66,19 @@ def history():
     return redirect(url_for('navigate'))
 
 
-@app.route('/submit', methods=['GET', 'POST'])
+@app.route('/submit', methods=['GET'])
 def submit():
     """
         Processes the user's query and redirects to the search results page.
     """
     global query, count, execution_time, pages
-    if request.method == 'POST':
-        query = request.form.get('q')
-    else:
-        query = request.args.get('q')
+    query = request.args.get('q')
     dbhandler = DBHandler()
     count, execution_time, pages = dbhandler.get(query)
     return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
-    try:
-        FlaskUI(app=app, server="flask").run()
-    except KeyboardInterrupt:
-        # This block will be executed when the FlaskUI window is closed abruptly.
-        pass
-    finally:
-        driver_service.quit()
+    ui = FlaskUI(app=app, server="flask", port=8080,
+                 on_shutdown=driver_service.quit())
+    ui.run()
