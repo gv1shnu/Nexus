@@ -51,6 +51,10 @@ Follow these steps to set up and run the Search Nexus Flask application:
 - HTML5: The markup language used for structuring the web pages.
 - CSS3: The stylesheet language used for styling the web pages.
 
+
+## Architecture
+![searchnexus_flowchart](https://github.com/gv1shnu/SearchNexus/assets/121789146/fb3aeee6-d430-4083-8842-7bbf3b341af2)
+
 ## Limitations
 
 - The search results may not always be consistent across different search engines due to variations in algorithms and indexing.

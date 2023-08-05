@@ -15,30 +15,51 @@ def get_yahoo_results(query: str) -> list:
     cards = list()
     try:
         soup = getSoup(url)
-        result_container = soup.find('ol', class_='reg searchCenterMiddle')
-        if result_container:
-            for li in result_container.find_all('li'):
-                unit = {'title': None, 'url': None, 'body': None}
-                div = li.find('div', class_="compTitle options-toggle")
-                if div:
-                    h3 = div.find('h3')
-                    if h3:
-                        anchor_tag = h3.find('a')
-                        if anchor_tag:
-                            unit['title'] = anchor_tag.get_text(strip=True)
-                            if is_valid_url(anchor_tag['href']):
-                                unit['url'] = anchor_tag['href']
-                p_div = li.find('div', class_="compText aAbs")
-                if p_div:
-                    p_element = p_div.find('p')
-                    if p_element:
-                        unit['body'] = p_element.find('span').text
+        ol = soup.find('ol', class_=lambda lmb: lmb and 'searchCenterMiddle' in lmb)
+        if ol:
+            lis = ol.find_all('li')
+            for li in lis:
+                if li:
+                    card = {'title': None, 'url': None, 'body': None}
+                    div1 = li.find('div', class_=lambda lmb: lmb and 'algo' in lmb)
+                    if div1:
+                        div_title_url = div1.find('div', class_="compTitle options-toggle")
+                        if div_title_url:
+                            h3 = div_title_url.find('h3')
+                            if h3:
+                                anchor_tag = h3.find('a')
+                                if anchor_tag:
+                                    aria = anchor_tag.get('aria-label')
+                                    if aria:
+                                        card['title'] = aria
+                                    href = anchor_tag.get('href')
+                                    if is_valid_url(href):
+                                        card['url'] = href
+                        div_body = li.find('div', class_="compText aAbs")
+                        if div_body:
+                            p_element = div_body.find('p')
+                            if p_element:
+                                span = p_element.find('span', class_="fc-falcon")
+                                if span:
+                                    card['body'] = span.text
 
-                if unit['title'] and unit['url']:
-                    unit['channel_name'] = get_domain(unit['title'])
-                    unit['channel_url'] = get_domain(unit['title'])
-                    unit['engine'] = engine_name
-                    cards.append(unit)
+                        if card['title'] and card['url']:
+                            card['channel_name'] = get_domain(card['title'])
+                            card['channel_url'] = get_domain(card['title'])
+                            card['engine'] = engine_name
+                            cards.append(card)
     except Exception as e:
         print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
     return cards
+
+# HTML tree structure
+# ------- ol.reg  searchCenterMiddle
+# -------- li
+# --------- div.(class must contain 'algo')
+# ---------- div.compTitle options-toggle
+# ----------- h3
+# ------------ a (for title, url)
+#
+# ---------- div.compText aAbs
+# ----------- p
+# ------------ span. fc-falcon (for body)

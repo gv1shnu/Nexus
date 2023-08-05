@@ -68,7 +68,7 @@ class Scrape:
         ans = func(self.query)
         end = time.time()
         timer = round((end - start), 2)
-        print(f"{name} took {timer}s")
+        # print(f"{name} took {timer}s")
         self.save_stat(name, len(ans), timer)
         self.results.extend(ans)
 
