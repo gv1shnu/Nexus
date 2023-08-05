@@ -26,6 +26,8 @@ Search Nexus is a flask-based application that allows users to perform searches 
 - Press Enter to initiate the search.
 - Search results from multiple search engines will be displayed within seconds.
 
+**Note**: Make sure Chrome is your default browser. It helps. 
+
 ## Screenshots
 
 ![Screenshot (17)](https://github.com/gv1shnu/SearchNexus/assets/121789146/c8669de2-864c-4ead-8473-bc34142ee18c)
@@ -79,8 +81,9 @@ TODO
 ----
 - [ ] Update the blurry icon
 - [ ] Center the result-container div
-- [ ] Properly scrape for YouTube video description again
+- [x] Properly scrape for YouTube video description again
 - [ ] Add more search engines
+- [ ] Pagination
 - [ ] Change the background of success.html
 - [ ] Organize displayed search results more comprehensively
 
