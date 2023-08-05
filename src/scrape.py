@@ -23,7 +23,6 @@ def preprocess(my_list: list) -> list:
 
 class Scrape:
     def __init__(self, q: str):
-        self.pairs = []
         self.query, self.results = q, []
         self.pairs = [
             {'name': "Bing", 'func': get_bing_results},
@@ -32,7 +31,9 @@ class Scrape:
         ]  # google will run non-threaded
 
         if os_name == "Windows":
-            self.pairs.append({'name': "YT", 'func': get_yt_results})
+            self.pairs.append(
+                {'name': "YT", 'func': get_yt_results}
+            )
 
     def get_all_results(self) -> list:
         threads = []
