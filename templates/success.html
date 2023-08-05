@@ -25,10 +25,12 @@
                                 {% for result in entry.results %}
                                     <!-- Results -->
                                     <li>
-                                        <a href="{{ result.url }}">{{ result.title }}</a>
-                                        {% if result.body %}
-                                            <!-- Snippet of the webpage -->
-                                            <p>{{ result.body }}</p>
+                                        {% if result.title and result.url %}
+                                            <a href="{{ result.url }}">{{ result.title }}</a>
+                                            {% if result.body %}
+                                                <!-- Snippet of the webpage -->
+                                                <p>{{ result.body }}</p>
+                                            {% endif %}
                                         {% endif %}
                                     </li>
                                 {% endfor %}
