@@ -11,7 +11,6 @@ import platform
 os_name = platform.system()
 
 
-# Remove duplicate URLs
 def preprocess(my_list: list) -> list:
     unique_urls = set()
     jkl = []
@@ -19,8 +18,6 @@ def preprocess(my_list: list) -> list:
         if item['url'] not in unique_urls:
             unique_urls.add(item['url'])
             jkl.append(item)
-        elif item['url']:
-            pass
     return jkl
 
 
@@ -53,7 +50,6 @@ class Scrape:
         ans = func(self.query)
         end = time.time()
         timer = round((end - start), 2)
-        # print(f"{name} took {timer}s")
         self.save_stat(name, len(ans), timer)
         self.results.extend(ans)
 

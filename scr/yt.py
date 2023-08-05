@@ -9,9 +9,8 @@ def get_yt_results(query: str) -> list:
     cards = list()
     url = get_url(q=query, base="https://www.youtube.com/", t="results?search_query")
     try:
-        driver = driver_service
-        driver.get(url)
-        elem = driver.find_element(By.ID, 'contents')
+        driver_service.get(url)
+        elem = driver_service.find_element(By.ID, 'contents')
         children_elems = elem.find_elements(By.ID, 'dismissible')
         for child in children_elems:
             if child:
@@ -21,7 +20,6 @@ def get_yt_results(query: str) -> list:
                     if 'metadata' in i.get_attribute('class'):
                         body += i.text
                 video_url, video_title, channel_url, channel_name = "", "", "", ""
-
                 try:
                     text_wrapper_div = child.find_element(By.CSS_SELECTOR,
                                                           'div.text-wrapper.style-scope.ytd-video-renderer')
@@ -48,19 +46,20 @@ def get_yt_results(query: str) -> list:
                 except NoSuchElementException:
                     pass
 
-                card = {'engine': engine_name, 'title': video_title, 'url': video_url, 'body': body,
-                        'channel_name': channel_name,
+                card = {'engine': engine_name, 'title': video_title, 'url': video_url,
+                        'body': body, 'channel_name': channel_name,
                         'channel_url': channel_url}
                 cards.append(card)
-        driver.close()
+        driver_service.close()
     except (WebDriverException, NoSuchElementException) as e:
         print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
     driver_service.quit()
     return cards
 
 
-# if __name__ == '__main__':
-#     results = get_yt_results('ios v android')
+if __name__ == '__main__':
+    results = get_yt_results('ios v android')
+    print(results)
 
 # HTML tree structure
 # ----- div#contents. style-scope ytd-item-section-renderer style-scope ytd-item-section-renderer
