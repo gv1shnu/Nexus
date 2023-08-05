@@ -44,12 +44,10 @@
                                     </div>
                                 </li>
                             {% endfor %}
-                        <!--
-                            {% else %}
-                                Display a message if no URLs found
-                                <p style="color: #f2f2f2;">Empty.</p>
-                            {% endif %}
-                        -->
+                        {% else %}
+                            <!-- Display a message if no URLs found -->
+                            <p style="color: #f2f2f2;">Empty.</p>
+                        {% endif %}
                     </ul>
                 {% endfor %}
             {% else %}
@@ -60,7 +58,7 @@
 
         <!-- Display the execution time -->
         <div class="execution-time">
-            Processing Time: {{ execution_time }} seconds
+            {{ count }} results ({{ execution_time }} seconds)
         </div>
     </body>
 </html>

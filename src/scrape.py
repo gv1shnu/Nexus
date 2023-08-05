@@ -1,15 +1,16 @@
 import random
 import threading
+import time
 import requests
 from bs4 import BeautifulSoup
 from googlesearch import search
-import selenium
 from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 from duckduckgo_search import DDGS
 from urllib.parse import urlparse
 from selenium.webdriver.common.by import By
+from src.driver import driver_service
 
 
 def is_valid_url(url: str) -> bool:
@@ -35,13 +36,12 @@ def get_domain(url: str):
 
 
 class Scrape:
-    def __init__(self, q: str, ds: selenium.webdriver.chrome.service.Service):
+    def __init__(self, q: str):
         """
         Initializes the Scrape object.
 
         Args:
             q (str): The search query.
-            ds (selenium.webdriver.chrome.service.Service): The pass along.
         """
         self.query = q
         self.headers = None
@@ -57,9 +57,17 @@ class Scrape:
         ]
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless --no-sandbox --disable-dev-shm-usage --disable-gpu")
-        self.driver_service = ds
+        self.driver_service = driver_service
         self.assign_header()
+        self.counter = {'Google': 0, 'DDG': 0, 'Yahoo': 0, 'YT': 0, 'Bing': 0}
+        self.timer = {'Google': 0.0, 'DDG': 0.0, 'Yahoo': 0.0, 'YT': 0.0, 'Bing': 0.0}
         self.results = []
+
+    def get_counter(self) -> int:
+        return sum(self.counter.values())
+
+    def get_timer(self) -> int:
+        return sum(self.timer.values())
 
     def get_results(self) -> list:
         """
@@ -86,6 +94,7 @@ class Scrape:
         """
         Scrapes search results from Google.
         """
+        start_time = time.time()
         ans = []
         try:
             dips = search(self.query, advanced=True)
@@ -93,18 +102,22 @@ class Scrape:
                     'channel_url': get_domain(dip.url), 'body': dip.description} for dip in dips]
         except requests.exceptions.HTTPError:
             print("Too Many Requests\n")
-        self.results.append({'engine': 'Google', 'results': ans})
+        self.counter['Google'] = len(ans)
+        end_time = time.time()
+        self.timer['Google'] = round(end_time - start_time, 2)
+        self.results.append({'engine': 'Google', 'count': self.counter['DDG'], 'time': self.timer['Google'], 'results': ans})
 
     def get_bing_urls(self) -> None:
         """
         Scrapes search results from Bing.
         Sends a GET request to Bing with the query as a parameter.
         """
+        start_time = time.time()
         url = self.get_url(base="https://www.bing.com/", t="search?q")
+        ans = list()
         try:
             response = requests.get(url, headers=self.headers).content
             soup = BeautifulSoup(response, 'html.parser')
-            ans = list()
             data1 = soup.find('ol', id='b_results')
             if data1:
                 data2 = data1.find_all("li")
@@ -126,20 +139,24 @@ class Scrape:
                         unit['channel_name'] = get_domain(unit['url'])
                         unit['channel_url'] = get_domain(unit['url'])
                         ans.append(unit)
-            self.results.append({'engine': 'Bing', 'results': ans})
         except NoSuchElementException:
             print('\033[0mBing. {}'.format(url))
+        self.counter['Bing'] = len(ans)
+        end_time = time.time()
+        self.timer['Google'] = round(end_time - start_time, 2)
+        self.results.append({'engine': 'Bing', 'count': self.counter['Bing'], 'time': self.timer['Bing'], 'results': ans})
 
     def get_yahoo_urls(self) -> None:
         """
         Scrapes search results from Yahoo.
         Sends a GET request to Yahoo with the query as a parameter.
         """
+        start_time = time.time()
         base_url = self.get_url(base='https://search.yahoo.com/', t='search?q')
         response = requests.get(base_url, headers=self.headers)
+        ans = list()
         try:
             soup = BeautifulSoup(response.content, 'html.parser')
-            ans = list()
             result_container = soup.find('ol', class_='reg searchCenterMiddle')
             if result_container:
                 for li in result_container.find_all('li'):
@@ -163,24 +180,31 @@ class Scrape:
                         unit['channel_name'] = get_domain(unit['title'])
                         unit['channel_url'] = get_domain(unit['title'])
                         ans.append(unit)
-
-            self.results.append({'engine': 'Yahoo', 'results': ans})
         except NoSuchElementException:
             print('\033[0mYahoo. {}'.format(response.url))
+        self.counter['Yahoo'] = len(ans)
+        end_time = time.time()
+        self.timer['Yahoo'] = round(end_time - start_time, 2)
+        self.results.append({'engine': 'Yahoo', 'count': self.counter['Yahoo'], 'time': self.timer['Yahoo'], 'results': ans})
 
     def get_duckduckgo_urls(self) -> None:
         """
         Scrapes search results from DuckDuckGo.
         """
+        start_time = time.time()
         ans = [{'title': r['title'], 'url': r['href'], 'channel_name': get_domain(r['href']),
                 'channel_url': get_domain(r['href']), 'body': r['body']} for r in DDGS().text(self.query)]
-        self.results.append({'engine': 'Duckduckgo', 'results': ans})
+        end_time = time.time()
+        self.timer['DDG'] = round(end_time - start_time, 2)
+        self.counter['DDG'] = len(ans)
+        self.results.append({'engine': 'Duckduckgo', 'count': self.counter['DDG'], 'time': self.timer['DDG'], 'results': ans})
 
     def get_youtube_urls(self) -> None:
         """
         Scrapes search results from YouTube.
         Uses Selenium WebDriver to simulate a browser and perform the search.
         """
+        start_time = time.time()
         ans = list()
         url = self.get_url(base="https://www.youtube.com/", t="results?search_query")
         try:
@@ -213,10 +237,13 @@ class Scrape:
                 unit = {'title': video_title, 'url': video_url, 'body': body, 'channel_name': channel_name,
                         'channel_url': channel_url}
                 ans.append(unit)
-            self.results.append({'engine': 'YouTube', 'results': ans})
             driver.close()
         except NoSuchElementException:
             print('\033[0mYT: {}'.format(url))
+        self.counter['YT'] = len(ans)
+        end_time = time.time()
+        self.timer['YT'] = round(end_time - start_time, 2)
+        self.results.append({'engine': 'YouTube', 'count': self.counter['YT'], 'time': self.timer['YT'], 'results': ans})
 
     def get_url(self, base: str, t: str) -> str:
         x = "+".join(self.query.split(' '))

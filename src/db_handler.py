@@ -1,6 +1,5 @@
 import os
-
-import selenium.webdriver.chrome.service
+import time
 from tinydb import TinyDB, Query
 from src.scrape import Scrape
 from datetime import date
@@ -16,25 +15,37 @@ class DBHandler:
             os.mkdir('db')
         self.db = TinyDB('db/search_results_db.json')
 
-    def insert(self, req: str, ds: selenium.webdriver.chrome.service.Service) -> list:
+    @staticmethod
+    def pagify(results: list) -> list:
+        return results  # working here
+
+    @staticmethod
+    def retrieve(req: str) -> dict:
+        scrape = Scrape(req)
+        raw_results = scrape.get_results()
+        results = DBHandler.pagify(raw_results)
+        counter = scrape.get_counter()
+        timer = scrape.get_timer()
+        return {'query': req,
+                'count': counter,
+                'time': timer,
+                'date': str(date.today()),
+                'results': results
+                }
+
+    def insert(self, req: str) -> tuple:
         """
         Inserts a new entry into the search results database.
         Takes a request as input and driver service as pass-along parameter and
          performs web scraping if not stored, to obtain the search results.
         """
         if req:
-            scrape = Scrape(req, ds)
-            results = scrape.get_results()
-            ans = {'query': req,
-                   'date': str(date.today()),
-                   'results': results
-                   }
+            ans = self.retrieve(req)
             self.db.insert(ans)
-            return results
+            return ans['count'], ans['time'], ans['results']
         print("\033[95m Null request")
-        return []
 
-    def update(self, entry: list, ds: selenium.webdriver.chrome.service.Service) -> list:
+    def update(self, entry: dict) -> tuple:
         """
         Updates an old entry into the search results database.
         Takes a request as input and driver service as pass-along parameter and
@@ -42,23 +53,19 @@ class DBHandler:
         """
         if entry:
             req = entry['query']
-            scrape = Scrape(req, ds)
-            results = scrape.get_results()
-            ans = {'query': req,
-                   'date': str(date.today()),
-                   'results': results
-                   }
-            self.db.update(ans, Query().query == req)
-            return ans['results']
+            ans = self.retrieve(req)
+            id = Query()['query'] == req
+            self.db.update(ans, id)
+            return ans['count'], ans['time'], ans['results']
         print("\033[95m Null request")
-        return []
 
-    def query(self, req: str) -> list:
+    def query(self, req: str) -> dict:
         """
         Queries the search results database for a specific request.
         """
-        query_result = self.db.search(Query().query == req)
+        id = Query()['query'] == req
+        query_result = self.db.search(id)
         if query_result:
             print("Entry exists")
             return query_result[0]
-        return []
+        return {}
