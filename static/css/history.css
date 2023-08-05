@@ -73,3 +73,40 @@ th, td{
     background-color: #ddd;
 }
 
+#clear-button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+#clear-button {
+    background-color: #ff5555;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#clear-button:hover {
+    background-color: #ff3333;
+}
+
+#home-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#home-button:hover {
+    background-color: #0056b3;
+}

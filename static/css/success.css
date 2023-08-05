@@ -1,3 +1,21 @@
+
+#home-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#home-button:hover {
+    background-color: #0056b3;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
@@ -43,7 +61,7 @@ a:hover {
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 80vw;
+    width: 75vw;
 }
 
 #result-container {

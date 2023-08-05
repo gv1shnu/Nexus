@@ -62,6 +62,8 @@ Follow these steps to set up and run the Search Nexus Flask application:
 - The search results may not always be consistent across different search engines due to variations in algorithms and indexing.
 - The application relies on the availability and performance of the search engines it queries.
 - The application currently supports a predefined set of search engines and cannot dynamically add or remove search engines.
+- I realize the repo is almost 47.97 MB now. I wonder how.
+
 
 ## Contributing
 

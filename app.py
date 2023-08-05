@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
+import webbrowser
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from src.db_handler import DBHandler
 from flaskwebgui import FlaskUI
 import logging
@@ -62,5 +63,24 @@ def submit():
     return redirect(url_for('index'))
 
 
+@app.route('/clear', methods=['POST'])
+def clear_browsing_data():
+    dbhandler = DBHandler()
+    if dbhandler.clear():
+        return jsonify({'message': 'Browsing data cleared successfully'}), 200
+    else:
+        return jsonify({'message': 'An error occurred'}), 500
+
+
 if __name__ == '__main__':
-    ui = FlaskUI(app=app, server="flask", port=8080).run()
+    port = 8080
+    # To run like a desktop app
+
+    # ui = FlaskUI(app=app, server="flask", port=port).run()
+
+    # To run on browser
+
+    webbrowser.open(f'http://127.0.0.1:{port}/')
+    app.run(port=port)
+
+

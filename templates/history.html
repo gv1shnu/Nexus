@@ -4,12 +4,23 @@
         <title>History - Search Nexus</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/history.css') }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="{{ url_for('static', filename='js/history.js') }}"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
         <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
     </head>
     <body>
+        <a href="{{ url_for('home') }}" id="home-button">
+            <i class="fa fa-home" style="font-size: 20px;"></i>
+        </a>
+
+        {% if page %}
+            <div id="clear-button-container">
+                <button id="clear-button" onclick="clearBrowsingData()">Clear Browsing Data</button>
+            </div>
+        {% endif %}
         <div id="history-container">
             {% if page %}
                 <table>

@@ -16,16 +16,16 @@ def is_entry_old(entry_date: str) -> bool:
 class DBHandler:
     def __init__(self):
         os.makedirs('db', exist_ok=True)
-        self.db_path = 'db/search_results_db.json'
+        self.db_path = 'db/search_results.json'
         self.db = TinyDB(self.db_path)
-        self.items_per_page = 7
 
-    def pagify(self, my_list: list) -> list:
-        total_pages = len(my_list) // self.items_per_page + 1
+    @staticmethod
+    def pagify(my_list: list, items_per_page: int) -> list:
+        total_pages = len(my_list) // items_per_page + 1
         pages = []
         for page in range(total_pages):
-            start_index = page * self.items_per_page
-            end_index = start_index + self.items_per_page
+            start_index = page * items_per_page
+            end_index = start_index + items_per_page
             items = my_list[start_index:end_index]
             pages.append(items)
         return pages
@@ -34,7 +34,7 @@ class DBHandler:
         start_time = time.time()
         scrape = Scrape(req)
         results = scrape.get_all_results()
-        pages = self.pagify(results)
+        pages = self.pagify(results, 7)
         end_time = time.time()
         timer = round((end_time - start_time), 2)
         current_time = datetime.now()
@@ -57,12 +57,17 @@ class DBHandler:
             return self.insert(req=query)
 
     def get_queries(self) -> list:
-        with open(self.db_path, 'r') as file:
-            data = json.load(file)
-            data = data['_default']
-            return self.pagify([{'date': data[key]['date'], 'timestamp': data[key]['timestamp'],
-                                 'query': data[key]['query']}
-                                for key in reversed(list(data.keys()))])
+        queries = []
+        if os.path.exists(self.db_path):
+            with open(self.db_path, 'r') as file:
+                try:
+                    data = json.load(file)
+                    data = data.get('_default', {})
+                    queries = [{'date': item['date'], 'timestamp': item['timestamp'], 'query': item['query']}
+                               for item in data.values()]
+                except json.JSONDecodeError as e:
+                    print(f"Error decoding JSON: {e}")
+        return self.pagify(queries, 10)
 
     def insert(self, req: str) -> tuple:
         if req:
@@ -89,3 +94,12 @@ class DBHandler:
             print("\033[92m \nEntry exists")
             return query_result[0]
         return {}
+
+    def clear(self):
+        try:
+            self.db.drop_tables()
+            return True
+        except Exception as e:
+            print('Error clearing data:', e)
+            return False
+
