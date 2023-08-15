@@ -1,6 +1,6 @@
 # Search Nexus
 
-Search Nexus is a flask-based application that allows users to perform searches across multiple search engines simultaneously and view the results in one place.
+Search Nexus is a desktop/web application that allows users to perform searches across multiple search engines simultaneously and view the results in one place.
 
 ## Features
 
@@ -10,7 +10,6 @@ Search Nexus is a flask-based application that allows users to perform searches 
 
 ## Usage
 
-- Download SearchNexus application directly from [here](https://drive.google.com/drive/folders/1XHZhvFNtmPjoWQmBPni-ozmtpBsHZ3Bf?usp=drive_link).
 - Enter your search query in the search box on the home page.
 - Press Enter to initiate the search.
 - Search results from multiple search engines will be displayed within seconds.
