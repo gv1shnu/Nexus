@@ -1,15 +1,25 @@
-from scr.helpers import get_url
+from typing import List
+from utils.helpers import generate_url_with_query, Card
 from selenium.webdriver.common.by import By
-from src.driver import driver
+from utils.driver import initialise_driver
 from selenium.common import NoSuchElementException, WebDriverException
+from utils.logger import Logger
+
+ENGINE_NAME = "YouTube"
+driver = initialise_driver()
+logger = Logger()
 
 
-def get_yt_results(query: str) -> list:
-    engine_name = "YouTube"
+def get_yt_results(
+        query: str,
+        filter_option: str
+) -> List[Card]:
+    if filter_option != "videos":
+        return []
     cards = list()
-    url = get_url(q=query, base="https://www.youtube.com/", t="results?search_query")
+    url = generate_url_with_query("https://www.youtube.com/", "results?search_query", query)
     try:
-        driver.get(url)
+        driver.get_user(url)
         elem = driver.find_element(By.ID, 'contents')
         children_elems = elem.find_elements(By.ID, 'dismissible')
         for child in children_elems:
@@ -19,7 +29,7 @@ def get_yt_results(query: str) -> list:
                 for i in yf:
                     if 'metadata' in i.get_attribute('class'):
                         body += i.text
-                video_url, video_title, channel_url, channel_name = "", "", "", ""
+                video_url, video_title, channel_url, channel_name, icon = "", "", "", "", ""
                 try:
                     text_wrapper_div = child.find_element(By.CSS_SELECTOR,
                                                           'div.text-wrapper.style-scope.ytd-video-renderer')
@@ -34,6 +44,12 @@ def get_yt_results(query: str) -> list:
                                     video_url = anchor_tag.get_attribute('href')
                                     video_title = anchor_tag.text
 
+                        div_channel_info = text_wrapper_div.find_element(By.ID, "channel-info")
+                        div_a = div_channel_info.find_element(By.TAG_NAME, "a")
+                        div_tmp = div_a.find_element(By.TAG_NAME, "yt-img-shadow")
+                        div_img = div_tmp.find_element(By.TAG_NAME, "img")
+                        icon = div_img.get_attribute("src")
+
                     div_info = text_wrapper_div.find_element(By.ID, "channel-info")
                     if div_info:
                         div_container = div_info.find_element(By.ID, "container")
@@ -45,18 +61,17 @@ def get_yt_results(query: str) -> list:
                                 channel_name = anchor_tag.text
                 except NoSuchElementException:
                     pass
-
                 if video_url and video_title:
-                    card = {'engine': engine_name, 'title': video_title, 'url': video_url,
-                            'body': body, 'channel_name': channel_name,
-                            'channel_url': channel_url}
+                    card = Card(engine=ENGINE_NAME, title=video_title, url=video_url,
+                                body=body, channel_name=channel_name,
+                                channel_url=channel_url, icon=icon)
                     cards.append(card)
         driver.close()
     except (WebDriverException, NoSuchElementException) as e:
-        print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
+        logger.exception('\033[0m{}: {} - {}'.format(str(e), ENGINE_NAME, url))
+        return []
     driver.quit()
     return cards
-
 
 # HTML tree structure
 # ----- div#contents. style-scope ytd-item-section-renderer style-scope ytd-item-section-renderer

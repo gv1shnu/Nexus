@@ -1,9 +1,19 @@
-from scr.helpers import get_url, is_valid_url, get_domain, get_soup
+from typing import List
+import favicon
+from utils.helpers import generate_url_with_query, is_valid_url, get_domain, get_soup, Card
+from utils.logger import Logger
+
+ENGINE_NAME = "Yahoo"
+logger = Logger()
 
 
-def get_yahoo_results(query: str) -> list:
-    engine_name = "Yahoo"
-    url = get_url(q=query, base='https://search.yahoo.com/', t='search?q')
+def get_yahoo_results(
+        query: str,
+        filter_option: str
+) -> List[Card]:
+    if filter_option != "text":
+        return []
+    url = generate_url_with_query('https://search.yahoo.com/', 'search?q', query)
     cards = list()
     try:
         soup = get_soup(url)
@@ -13,7 +23,7 @@ def get_yahoo_results(query: str) -> list:
                 lis = ol.find_all('li')
                 for li in lis:
                     if li:
-                        card = {'title': None, 'url': None, 'body': None}
+                        card = Card(engine=ENGINE_NAME)
                         div1 = li.find('div', class_=lambda lmb: lmb and 'algo' in lmb)
                         if div1:
                             div_title_url = div1.find('div', class_="compTitle options-toggle")
@@ -22,27 +32,26 @@ def get_yahoo_results(query: str) -> list:
                                 if h3:
                                     anchor_tag = h3.find('a')
                                     if anchor_tag:
-                                        aria = anchor_tag.get('aria-label')
+                                        aria = anchor_tag.get_user('aria-label')
                                         if aria:
-                                            card['title'] = aria
-                                        href = anchor_tag.get('href')
+                                            card.title = aria
+                                        href = anchor_tag.get_user('href')
                                         if is_valid_url(href):
-                                            card['url'] = href
+                                            card.url = href
                             div_body = li.find('div', class_="compText aAbs")
                             if div_body:
                                 p_element = div_body.find('p')
                                 if p_element:
                                     span = p_element.find('span', class_="fc-falcon")
                                     if span:
-                                        card['body'] = span.text
-
-                            if card['title'] and card['url']:
-                                card['channel_name'] = get_domain(card['title'])
-                                card['channel_url'] = get_domain(card['title'])
-                                card['engine'] = engine_name
+                                        card.body = span.text
+                            if card.title and card.url:
+                                card.channel_name = get_domain(card.title).split('.')[1]
+                                card.channel_url = "https://"+get_domain(card.title)
+                                card.icon = favicon.get(card.url)[0]
                                 cards.append(card)
     except Exception as e:
-        print('\033[0m{}: {} - {}'.format(str(e), engine_name, url))
+        logger.error('\033[0m{}: {} - {}'.format(str(e), ENGINE_NAME, url))
     return cards
 
 # HTML tree structure
