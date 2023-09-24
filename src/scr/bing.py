@@ -5,9 +5,7 @@ from typing import List
 
 # Third party library
 import bs4.element
-import favicon
 
-from src.decl import Card
 # Internal imports
 from src.helpers import generate_url_with_query, get_container_from_parent, \
     find_all_containers_from_parent, get_soup, Card, get_domain, get_icon

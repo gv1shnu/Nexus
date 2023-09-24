@@ -3,7 +3,6 @@ import time
 from typing import List
 
 # Third party libraries
-import favicon
 import requests
 from googlesearch import search
 

@@ -5,8 +5,6 @@ from pathlib import Path
 # Third party libraries
 from flask_caching import Cache
 
-from src.helpers import Card
-
 
 class PagesEncoder(json.JSONEncoder):
     def default(self, o):

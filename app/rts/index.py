@@ -1,6 +1,5 @@
 # Third-party libraries
 from flask import Blueprint, abort, render_template
-from flask_login import current_user
 from jinja2 import TemplateNotFound
 
 # Internal import
