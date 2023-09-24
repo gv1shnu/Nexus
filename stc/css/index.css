@@ -1,0 +1,219 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 10px;
+
+    background-image: url("../img/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p, label{
+    color: #F3F3F3;
+}
+
+ol li, h4{
+    color: #F3F3F3;
+    padding: 10px;
+}
+
+ul li {
+    padding: 5px;
+}
+
+#progress-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#progress-button:hover{
+    background-color: #0056b3;
+}
+
+h3{
+    color: orange;
+}
+
+label img{
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+.container {
+    text-align: center;
+}
+
+h1#heading {
+    color: #0AA;
+    font-size: 50px;
+}
+
+form {
+    color: #555;
+    display: inline-block;
+    padding: 20px;
+    border: none;
+    border-radius: 4px;
+    margin: 0;
+    background-color: transparent;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+#wait-gif{
+    text-align: center;
+    margin-top: 30px;
+    margin-left: 150px;
+}
+
+.filter-icon {
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+.filter-icon i {
+    color: white;
+    font-size:24px;
+}
+
+.options-and-filter {
+    display: flex;
+}
+
+#filter {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+option{
+    font-size: 14px;
+}
+
+label{
+    font-size: 16px;
+}
+
+.options-container, .filter-container{
+    display: none;
+}
+
+.options-container{
+    margin-left: 10px;
+}
+
+.filter-container{
+    margin-left: 20px;
+}
+
+.options-container label {
+    padding: 0 2px;
+}
+
+.check {
+  -webkit-appearance: none;
+  height: 17px;
+  width: 17px;
+  transition: 0.10s;
+  background-color: #808080;
+  text-align: center;
+  font-weight: 400;
+  color: white;
+  border-radius: 3px;
+  outline: none;
+}
+
+.check:checked {
+  background-color: #0E9700;
+}
+
+.check:before {
+  content: "-";
+}
+.check:checked:before {
+  content: "✔";
+}
+
+.check:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+._submit{
+    display: none;
+}
+
+input[type="text"] {
+    border: none;
+    background: transparent;
+    margin: 0;
+    padding: 7px 8px;
+    padding-left: 20px;
+    font-size: 18px;
+    color: #fff;
+    border: 1px solid #dddddd;
+    border-radius: inherit;
+    width: 700px;
+    height: 30px;
+    max-width: 100%;
+    border-radius: 20px;
+}
+
+#wait-message, #wait-gif{
+    display: none;
+}
+
+input[type="text"]::placeholder {
+    color: #bbb;
+}
+
+#footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    z-index: 9999;
+}
+
+.last {
+    background: linear-gradient(to right, #f2f2f2, #000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+}
+
+.github-corner {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  z-index: 9999;
+}
+
+.github-corner i {
+  font-size: 30px;
+  color: #fff;
+}
+
+.github-corner:hover {
+  opacity: 0.7;
+}

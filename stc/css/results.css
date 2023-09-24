@@ -1,0 +1,178 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 10px;
+    background-image: url("../img/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+p, label{
+    color: #F3F3F3;
+}
+
+#home-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#home-button:hover {
+    background-color: #0056b3;
+}
+
+.icon{
+    margin-right: 10px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-cell {
+  flex: 0 0 auto;
+}
+
+.content-cell {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info{
+    height: 30px;
+}
+
+.channel {
+  text-align: left;
+}
+
+.engine {
+  text-align: right;
+}
+
+.engine a{
+    text-decoration: none;
+    color: #777;
+}
+
+.body p {
+  margin: 0;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+a {
+    color: #0084ff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.stats {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #f3f3f3;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.card {
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    width: 65vw;
+}
+
+.left-div, .right-div {
+    width: 20vw;
+    text-align: center;
+    padding: 10px;
+}
+
+.ad {
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 100%;
+}
+
+.ad img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    object-fit: contain;
+    align: center;
+    padding: 10px;
+}
+
+.center-div{
+    width: 65vw;
+    padding: 10px;
+}
+
+#result-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pagination {
+    display: flex inline-block;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.pagination a {
+    color: #fff;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+

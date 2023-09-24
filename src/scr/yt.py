@@ -1,11 +1,18 @@
-from typing import List
-from utils.helpers import generate_url_with_query, Card
-from selenium.webdriver.common.by import By
-from utils.driver import initialise_driver
-from selenium.common import NoSuchElementException, WebDriverException
-from utils.logger import Logger
+"""YouTube Search Results Scraper [Under Construction]"""
 
-ENGINE_NAME = "YouTube"
+# Python standard library
+from typing import List
+
+# Third party libraries
+from selenium.webdriver.common.by import By
+from selenium.common import NoSuchElementException, WebDriverException
+
+# Internal imports
+from src.helpers import generate_url_with_query, Card
+from utl.driver import initialise_driver
+from utl.logger import Logger
+
+ENGINE_NAME: str = "YouTube"
 driver = initialise_driver()
 logger = Logger()
 

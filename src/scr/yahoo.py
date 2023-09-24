@@ -1,7 +1,9 @@
+"""Yahoo Search Results Scraper [Under Construction]"""
+
 from typing import List
 import favicon
-from utils.helpers import generate_url_with_query, is_valid_url, get_domain, get_soup, Card
-from utils.logger import Logger
+from src.helpers import generate_url_with_query, get_domain, get_soup, Card
+from utl.logger import Logger
 
 ENGINE_NAME = "Yahoo"
 logger = Logger()
@@ -36,7 +38,7 @@ def get_yahoo_results(
                                         if aria:
                                             card.title = aria
                                         href = anchor_tag.get_user('href')
-                                        if is_valid_url(href):
+                                        if href:
                                             card.url = href
                             div_body = li.find('div', class_="compText aAbs")
                             if div_body:

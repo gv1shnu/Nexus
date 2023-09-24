@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Search Nexus</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Adding necessary stylesheets -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- Adding relevant icon links -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='ico/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='ico/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='ico/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='ico/site.webmanifest') }}">
+    </head>
+    <body>
+        <!-- Nexus in progress redirection button -->
+        <a href=" {{ url_for('index.progress') }}" id="progress-button">
+            <i class="fa fa-cog" style="font-size: 20px;"></i>
+        </a>
+        <!-- Nexus home container -->
+        <div class="container">
+            <h1 id="heading">Search Nexus</h1>
+            <br>
+            <!-- Nexus form container -->
+            <form action="/submit" method="post">
+
+                <!-- Nexus search bar container -->
+                <div class="search-container">
+                    <!-- Nexus search bar -->
+                    <input type="text" id="q" name="q" placeholder="Enter your query">
+                    <button type="submit" class="_submit"></button>
+
+                    <!-- Nexus filter icon with toggle function to show/hide add-ons -->
+                    <a class="filter-icon" onclick="show()">
+                        <i class="fa fa-filter"></i>
+                    </a>
+                </div>
+                <br>
+
+                <!-- Nexus add-ons container-->
+                <div class="options-and-filter">
+
+                    <!-- Nexus options container -->
+                    <div class="options-container">
+                        {% for option in options %}
+                            <!-- Nexus checkbox for option-->
+
+                            <!-- For the time being -->
+                            {% if option in ["Bing", "Reddit", "YouTube", "Yahoo"] %}
+                                <label>
+                                    <input type="checkbox" name="options"
+                                           value="{{ option.lower() }}"
+                                           class="check" disabled>
+                                    {{ option }}
+                                </label>
+
+                            <!-- Enabling google and duckduckgo checkbox as default -->
+                            {% else %}
+                                <label>
+                                    <!-- Applying lower operation for solving unintended ambiguity -->
+                                    <input type="checkbox" name="options"
+                                           value="{{ option.lower() }}"
+                                           class="check" checked>
+                                    {{ option }}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <!-- Nexus filter container -->
+                    <div class="filter-container">
+                        <label for="filter">Filter: </label>
+                        <select name="filter" id="filter">
+                            {% for filter in filters %}
+                                <!-- Applying lower operation for solving unintended ambiguity -->
+                                <option value="{{ filter.lower() }}">
+                                    {{ filter }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Loading wait-message after 1s -->
+            <p id="wait-message">Please wait...</p>
+
+            <!-- Loading waiting-GIF after crossing 4s threshold -->
+            <img id="wait-gif" src="{{ url_for('static', filename='img/fun/waiting.gif') }}" alt="Waiting">
+        </div>
+
+        <!-- Nexus home footer -->
+        <footer id="footer">
+            <!-- Placing source code repo in footer -->
+            <a href="https://github.com/gv1shnu/SearchNexus" target="_blank" class="github-corner">
+                <i class="fa fa-github" style="font-size:25px"></i>
+            </a>
+            <!-- Author(me) name -->
+            <p class="last"> &copy; 2023 | GANDARAPU VISHNU </p>
+        </footer>
+
+        <!-- Adding link to external script -->
+        <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+    </body>
+</html>

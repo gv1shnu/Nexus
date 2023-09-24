@@ -1,6 +1,6 @@
 # Search Nexus
 
-Search Nexus is a desktop/web application that allows users to perform searches across multiple search engines simultaneously and view the results in one place.
+Search Nexus is a web application that allows users to perform searches across multiple search engines simultaneously and view the results in one place.
 
 ## Features
 
@@ -10,17 +10,11 @@ Search Nexus is a desktop/web application that allows users to perform searches 
 
 ## Usage
 
-- Enter your search query in the search box on the home page.
+- Enter your search query in the search box at [searchnexus.net](https://searchnexus.net).
 - Press Enter to initiate the search.
 - Search results from multiple search engines will be displayed within seconds.
 
-**Note**: Make sure Chrome is your default browser. It helps. 
-
-## Screenshots
-
-![Screenshot (36)](https://github.com/gv1shnu/SearchNexus/assets/121789146/17073fa0-8e88-452c-933e-1757428867e4)
-
-![Screenshot (35)](https://github.com/gv1shnu/SearchNexus/assets/121789146/510ca5c8-d454-4a5a-b0e6-3cf80c82933f)
+**Note**: Make sure Chrome is your default browser. It helps. (Optional)
 
 
 ## Installation
@@ -53,15 +47,11 @@ Follow these steps to set up and run the Search Nexus Flask application:
 - CSS3: The stylesheet language used for styling the web pages.
 
 
-## Architecture
-![searchnexus_flowchart](https://github.com/gv1shnu/SearchNexus/assets/121789146/fb3aeee6-d430-4083-8842-7bbf3b341af2)
-
 ## Limitations
 
 - The search results may not always be consistent across different search engines due to variations in algorithms and indexing.
 - The application relies on the availability and performance of the search engines it queries.
 - The application currently supports a predefined set of search engines and cannot dynamically add or remove search engines.
-- I realize the repo is almost 47.97 MB now. I wonder how.
 
 
 ## Contributing
