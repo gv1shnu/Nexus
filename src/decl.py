@@ -19,6 +19,12 @@ class Card:
     def __str__(self):
         return f'<Card data: {self.title}>'
 
+    def __getitem__(self, key):
+        return getattr(self, key)
+
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
+
 
 Page = List[Card]
 

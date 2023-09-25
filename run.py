@@ -6,7 +6,7 @@ from utl.logger import Logger
 # Third party library
 from waitress import serve
 
-MODE = "PRODUCTION"
+MODE = "DEBUG"
 logger = Logger()
 
 

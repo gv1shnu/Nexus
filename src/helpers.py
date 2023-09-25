@@ -21,7 +21,11 @@ logger = Logger()
 
 def get_icon(url: str) -> str | None:
     try:
-        return favicon.get(url, headers=get_header())[0].url
+        return favicon.get(
+            url,
+            headers=get_header(),
+            allow_redirects=False
+        )[0].url
     except (IndexError, HTTPError):
         return None
 

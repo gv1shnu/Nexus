@@ -1,6 +1,7 @@
 """Scraping handler"""
 
-import time
+# Python standard libraries
+import threading
 from typing import List, Callable
 
 # Internal imports
@@ -27,29 +28,50 @@ class Scrape:
             # {'name': "yahoo", 'func': get_yahoo_results},  # 3
             # {'name': "youtube", 'func': get_yt_results},  # 4
             # {'name': "reddit", 'func': get_reddit_results},  # 5
-            {'name': "google", 'func': get_google_results}  # 6
-        ]
+        ]  # google will run non-threaded # 6
+        self.results_lock = threading.Lock()
 
     def get_results(self, q_opt_f_tuple: tuple) -> List[List[Card]]:
+        threads = []
         try:
             for pair in self.pairs:
                 if pair['name'] in q_opt_f_tuple[1]:  # options
-                    self._search(
-                        q_opt_f_tuple[0],  # q
-                        q_opt_f_tuple[2],  # filter
-                        pair['func']
+                    thread = threading.Thread(
+                        target=self._search,
+                        args=(
+                            q_opt_f_tuple[0],  # q
+                            q_opt_f_tuple[2],  # filter
+                            pair['func']
+                        )
                     )
-            return pagify(remove_duplicate_cards(self.results), 7)
+                    threads.append(thread)
+
+            # for unknown reasons, google only runs fine when non-threaded
+            if "google" in q_opt_f_tuple[1]:
+                self._search(
+                    q_opt_f_tuple[0],  # q
+                    q_opt_f_tuple[2],  # filter
+                    get_google_results
+                )
+
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+
+            return pagify(
+                remove_duplicate_cards(
+                    self.results
+                ), 7
+            )
         except Exception as e:
             logger.exception(f"An error occurred while getting all results: {e}")
             return []
 
     def _search(self, q: str, _filter: str, func: Callable):
         try:
-            start = time.perf_counter()
             ans = func(q, _filter)
-            end = time.perf_counter()
-            timer = round((end - start), 2)
-            self.results.extend(ans)
+            with self.results_lock:
+                self.results.extend(ans)
         except Exception as e:
             logger.exception(f"An error occurred while implementing search func: {e}")

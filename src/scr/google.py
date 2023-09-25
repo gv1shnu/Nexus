@@ -30,7 +30,6 @@ def get_google_results(
         dips = search(query, advanced=True)
         for dip in dips:
             url = dip.url
-            icon = get_icon(url)
             time.sleep(0.5)
             channel_url = "https://" + get_domain(url)
             channel_name = channel_url.split('.')[1]
@@ -38,7 +37,7 @@ def get_google_results(
                 engine=ENGINE_NAME, title=dip.title,
                 url=url, channel_name=channel_name,
                 channel_url=channel_url,
-                body=dip.description, icon=icon
+                body=dip.description
             )
             cards.append(card)
     except requests.exceptions.HTTPError:

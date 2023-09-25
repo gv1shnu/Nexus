@@ -1,7 +1,7 @@
 """Yahoo Search Results Scraper [Under Construction]"""
 
 from typing import List
-from src.helpers import generate_url_with_query, get_domain, get_soup, Card, get_icon
+from src.helpers import generate_url_with_query, get_domain, get_soup, Card
 from utl.logger import Logger
 
 ENGINE_NAME = "Yahoo"
@@ -49,7 +49,6 @@ def get_yahoo_results(
                             if card.title and card.url:
                                 card.channel_name = get_domain(card.title).split('.')[1]
                                 card.channel_url = "https://"+get_domain(card.title)
-                                card.icon = get_icon(card.url)
                                 cards.append(card)
     except Exception as e:
         logger.error('\033[0m{}: {} - {}'.format(str(e), ENGINE_NAME, url))

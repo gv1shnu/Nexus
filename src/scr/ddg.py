@@ -7,7 +7,7 @@ from requests.exceptions import HTTPError
 from duckduckgo_search import DDGS
 
 # Internal imports
-from src.helpers import get_domain, Card, get_icon
+from src.helpers import get_domain, Card
 from utl.logger import Logger
 
 ENGINE_NAME = "Duckduckgo"
@@ -23,14 +23,12 @@ def get_ddg_results(
         if filter_option == "text":
             for r in DDGS().text(query):
                 url = r["href"]
-                icon = get_icon(url)
                 channel_url = "https://" + get_domain(url)
                 channel_name = channel_url.split('.')[1]
                 card = Card(
                     title=r['title'], url=r['href'],
                     channel_name=channel_name,
                     channel_url=channel_url, body=r['body'],
-                    icon=icon,
                     engine=ENGINE_NAME
                 )
                 cards.append(card)
@@ -72,4 +70,3 @@ def get_ddg_results(
         logger.exception(f"An error occurred while fetching DDG results: {e}")
         return []
     return cards
-

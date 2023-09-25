@@ -8,7 +8,7 @@ import bs4.element
 
 # Internal imports
 from src.helpers import generate_url_with_query, get_container_from_parent, \
-    find_all_containers_from_parent, get_soup, Card, get_domain, get_icon
+    find_all_containers_from_parent, get_soup, Card, get_domain
 from utl.logger import Logger
 
 ENGINE_NAME: str = "Bing"
@@ -40,9 +40,8 @@ def get_card_from_li(
                 link = a.get('href')
                 logger.debug(f"link: {link}")
                 if link:
-                    (card.url, card.icon, card.channel_url) = (link,
-                                                               get_icon(link),
-                                                               get_domain(link))
+                    (card.url, card.channel_url) = (link,
+                                                    get_domain(link))
                 else:
                     logger.error("Empty URL found")
                 div_tptxt = get_container_from_parent(a, 'div', ".tptxt")
@@ -80,7 +79,9 @@ def get_card_from_li(
 
     return card
 
+
 cnt = 0
+
 
 def get_bing_results(
         query: str,

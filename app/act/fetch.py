@@ -29,7 +29,9 @@ def submit():
 
     start: float = time.perf_counter()
     scraper = Scrape()
-    pages: Pages = scraper.get_results((query, selected_options, filter_option))
+    pages: Pages = scraper.get_results(
+        (query, selected_options, filter_option)
+    )
     end: float = time.perf_counter()
     duration = round((end - start), 2)
 

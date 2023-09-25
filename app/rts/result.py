@@ -3,7 +3,7 @@ from flask import Blueprint, abort, render_template, session, request, current_a
 from jinja2 import TemplateNotFound
 
 # Internal imports
-from src.helpers import get_current_page
+from src.helpers import get_current_page, get_icon
 from utl.logger import Logger
 from src.decl import Pages, Page
 
@@ -24,6 +24,11 @@ def index():
         current_page: Page = get_current_page(
             page_number, pages
         )
+
+        # Update icon links here, to reduce n/w overload
+        for card in current_page:
+            card["icon"] = get_icon(card["url"])
+
         return render_template(
             'results.html',
             q=session["query"],
