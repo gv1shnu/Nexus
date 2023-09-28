@@ -5,8 +5,8 @@ import threading
 from typing import List, Callable
 
 # Internal imports
-from src.scr.google import get_google_results
-from src.scr.ddg import get_ddg_results
+from src.scr.lib.google import get_google_results
+from src.scr.lib.ddg import get_ddg_results
 
 # from src.scr.bing import get_bing_results
 # from src.scr.yahoo import get_yahoo_results

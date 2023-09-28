@@ -46,3 +46,6 @@ class CacheManager:
         """
         deserialized_pages = self.cache.get(variable_handle)
         return json.loads(deserialized_pages)
+
+    def clear(self):
+        self.cache.clear()

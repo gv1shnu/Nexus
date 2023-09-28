@@ -5,7 +5,7 @@ from jinja2 import TemplateNotFound
 # Internal imports
 from src.helpers import get_current_page, get_icon
 from utl.logger import Logger
-from src.decl import Pages, Page
+from src.decl import Pages, Page, Card
 
 res_bp = Blueprint('res', __name__)
 logger = Logger()
@@ -41,4 +41,3 @@ def index():
     except TemplateNotFound:
         logger.error(f"results.html was not found.")
         abort(404)
-

@@ -1,5 +1,5 @@
 # Third-party libraries
-from flask import Blueprint, abort, render_template
+from flask import Blueprint, abort, render_template, current_app
 from jinja2 import TemplateNotFound
 
 # Internal import
@@ -22,6 +22,8 @@ logger = Logger()
 # Home route of the application
 @index_bp.route('/')
 def index():
+    cache_manager = current_app.extensions['cache_manager']
+    cache_manager.clear()
     try:
         return render_template(
             "index.html",
@@ -30,16 +32,4 @@ def index():
         )
     except TemplateNotFound:
         logger.error(f"index.html was not found.")
-        abort(404)
-
-
-@index_bp.route(
-    "/in-progress",
-    endpoint='progress'
-)
-def progress():
-    try:
-        return render_template("in_progress.html")
-    except TemplateNotFound:
-        logger.error(f"in_progress.html was not found.")
         abort(404)

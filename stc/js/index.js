@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
         setTimeout(function() {
             gifContainer.style.display = 'block';
-        }, 4000);
+        }, 6000);
     });
 });
 
 function show(){
-    console.log("Filter clicked");
     const optionsContainer = document.querySelector('.options-container');
     const filterContainer = document.querySelector('.filter-container');
-    optionsContainer.style.display = optionsContainer.style.display === 'none' ? 'block' : 'none';
-    filterContainer.style.display = filterContainer.style.display === 'none' ? 'block' : 'none';
+
+    optionsContainer.style.display = optionsContainer.style.display === 'none' || optionsContainer.style.display === '' ? 'block' : 'none';
+    filterContainer.style.display = filterContainer.style.display === 'none' || filterContainer.style.display === '' ? 'block' : 'none';
 }

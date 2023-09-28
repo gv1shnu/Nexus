@@ -19,10 +19,6 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
     </head>
     <body>
-        <!-- Nexus in progress redirection button -->
-        <a href=" {{ url_for('index.progress') }}" id="progress-button">
-            <i class="fa fa-cog" style="font-size: 20px;"></i>
-        </a>
         <!-- Nexus home container -->
         <div class="container">
             <h1 id="heading">Search Nexus</h1>
@@ -33,7 +29,7 @@
                 <!-- Nexus search bar container -->
                 <div class="search-container">
                     <!-- Nexus search bar -->
-                    <input type="text" id="q" name="q" placeholder="Enter your query">
+                    <input type="text" id="q" name="q" placeholder="Enter your query" autofocus>
                     <button type="submit" class="_submit"></button>
 
                     <!-- Nexus filter icon with toggle function to show/hide add-ons -->
@@ -91,7 +87,7 @@
             <!-- Loading wait-message after 1s -->
             <p id="wait-message">Please wait...</p>
 
-            <!-- Loading waiting-GIF after crossing 4s threshold -->
+            <!-- Loading waiting-GIF after crossing 6s threshold -->
             <img id="wait-gif" src="{{ url_for('static', filename='img/fun/waiting.gif') }}" alt="Waiting">
         </div>
 

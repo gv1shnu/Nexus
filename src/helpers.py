@@ -1,6 +1,7 @@
 """Helper functions for web scrapers"""
-
 # Python standard library
+from collections import defaultdict
+from random import shuffle
 from typing import List
 
 # Third party libraries
@@ -151,8 +152,19 @@ def get_current_page(
     return []
 
 
-# Removes duplicate URLs
-def remove_duplicate_cards(my_list: Page) -> List[Card]:
+def balance(unique_items: List[Card], max_limit_per_engine: int):
+    balanced_items = list()
+    cnt = defaultdict(int)
+    for item in unique_items:
+        cnt[item.engine] += 1
+    for engine in cnt.keys():
+        engine_items = [item for item in unique_items if item.engine == engine]
+        balanced_items.extend(engine_items[:min(max_limit_per_engine, cnt[engine])])
+    shuffle(balanced_items)
+    return balanced_items
+
+
+def remove_duplicate_cards(my_list: List[Card]) -> List[Card]:
     """
     Remove duplicates from a list of cards based on the 'url' attribute.
 
