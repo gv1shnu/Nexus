@@ -3,10 +3,10 @@
 # Python standard library
 import os
 
-# Internal import
+# Internal imports
+from decl import SUPPORTED_PLATFORM
 from utl.logger import Logger
 
-SUPPORTED_PLATFORM = "Linux"
 logger = Logger()
 
 

@@ -9,7 +9,7 @@ from selenium.common import NoSuchElementException, WebDriverException
 
 # Internal imports
 from src.helpers import generate_url_with_query, Card
-from utl.driver import initialise_driver
+from utl.sel.driver import initialise_driver
 from utl.logger import Logger
 
 ENGINE_NAME: str = "YouTube"

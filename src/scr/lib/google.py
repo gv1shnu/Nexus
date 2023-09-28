@@ -1,17 +1,32 @@
-# Python standard library
-import time
+"""Google search results scraper"""
+
+# Python standard libraries
 from typing import List
 
 # Third party libraries
 import requests
-from googlesearch import search
 
 # Internal imports
-from src.helpers import get_domain, Card, get_icon
+from src.helpers import get_domain, Card, get_soup, generate_url_with_query
 from utl.logger import Logger
+from decl import MAX_LIMIT_PER_ENGINE
 
-ENGINE_NAME = "Google"
+ENGINE_NAME: str = "Google"
 logger = Logger()
+
+
+def search(url: str) -> tuple:
+    soup = get_soup(url)
+    result_block = soup.find_all("div", attrs={"class": "g"})
+    for result in result_block:
+        link = result.find("a", href=True)
+        title = result.find("h3")
+        description_box = result.find(
+            "div", {"style": "-webkit-line-clamp:2"})
+        if description_box:
+            description = description_box.text
+            if link and title and description:
+                yield link["href"], title.text, description
 
 
 def get_google_results(
@@ -27,17 +42,21 @@ def get_google_results(
         return []
     cards = list()
     try:
-        dips = search(query, advanced=True)
+        dips: tuple = search(
+            generate_url_with_query(
+                "https://www.google.com/",
+                "search?q",
+                query,
+                MAX_LIMIT_PER_ENGINE
+            )
+        )
         for dip in dips:
-            url = dip.url
-            time.sleep(0.5)
-            channel_url = "https://" + get_domain(url)
-            channel_name = channel_url.split('.')[1]
+            url: str = dip[0]
+            channel_url: str = "https://" + get_domain(url)
             card = Card(
-                engine=ENGINE_NAME, title=dip.title,
-                url=url, channel_name=channel_name,
-                channel_url=channel_url,
-                body=dip.description
+                engine=ENGINE_NAME, title=dip[1],
+                url=url, channel=channel_url,
+                body=dip[2]
             )
             cards.append(card)
     except requests.exceptions.HTTPError:

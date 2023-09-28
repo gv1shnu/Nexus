@@ -45,14 +45,14 @@
                                             </div>
                                             <div class="content-cell">
                                                 <div class="title">
-                                                    <a href="{{ card.url }}">{{ card.title }}</a>
+                                                    <a href="{{ card.url }}" target="_blank">{{ card.title }}</a>
                                                 </div>
                                                 <div class="info">
                                                     <div class="channel">
-                                                        <a href="{{ card.channel_url }}">{{ card.channel_name.upper() }}</a>
+                                                        <a href="{{ card.channel }}" target="_blank">{{ card.channel[8:] }}</a>
                                                     </div>
                                                     <div class="engine">
-                                                        <a href="{{ engine_url }}">{{ card.engine }}</a>
+                                                        <a href="{{ engine_url }}" target="_blank">{{ card.engine }}</a>
                                                     </div>
                                                 </div>
                                                 <div class="body">

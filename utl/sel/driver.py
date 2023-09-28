@@ -9,11 +9,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import ChromeOptions
 
 # Internal imports
-from utl.get_chr import is_chrome_installed
-from utl.get_driver import get_chromedriver_url, download, unzip
+from decl import CDR_PATH
+from utl.sel.get_chr import is_chrome_installed
+from utl.sel.get_driver import get_chromedriver_url, download, unzip
 from utl.logger import Logger
 
-CDR_PATH = "./cdr"
 logger = Logger()
 
 

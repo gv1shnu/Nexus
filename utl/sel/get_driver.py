@@ -1,14 +1,19 @@
 """Chromedriver Download and Extraction"""
 
+# Python standard libraries
 import os
 import time
+
+# Third party libraries
 from tqdm import tqdm as tqdm
 import requests as requests
 import zipfile
+
+# Internal imports
+from decl import CFT_URL
 from src.helpers import get_soup, get_header
 from utl.logger import Logger
 
-CFT_URL = "https://googlechromelabs.github.io/chrome-for-testing/"
 logger = Logger()
 
 

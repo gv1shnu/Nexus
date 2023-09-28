@@ -11,7 +11,7 @@ from flask import (
 # Internal imports
 from src.scrape import Scrape
 from utl.logger import Logger
-from src.decl import Pages
+from decl import Pages
 
 fetch_bp = Blueprint('fetch', __name__)
 logger = Logger()

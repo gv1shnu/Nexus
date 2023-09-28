@@ -6,7 +6,7 @@ from utl.logger import Logger
 # Third party library
 from waitress import serve
 
-MODE = "DEBUG"
+MODE: str = "PRODUCTION"
 logger = Logger()
 
 
@@ -17,5 +17,5 @@ if __name__ == '__main__':
     elif MODE == "DEBUG":
         app.run()
     else:
-        logger.error("Invalid Mode")
+        logger.critical("Invalid Mode")
         exit(134)

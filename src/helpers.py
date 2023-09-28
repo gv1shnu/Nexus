@@ -1,6 +1,6 @@
 """Helper functions for web scrapers"""
-# Python standard library
-from collections import defaultdict
+
+# Python standard libraries
 from random import shuffle
 from typing import List
 
@@ -15,7 +15,7 @@ from requests.exceptions import HTTPError
 
 # Internal imports
 from utl.logger import Logger
-from src.decl import Card, Pages, Page
+from decl import Card, Pages, Page
 
 logger = Logger()
 
@@ -42,6 +42,7 @@ def get_domain(url: str) -> str:
     return parsed_url.netloc
 
 
+# in-PROGRESS
 def get_container_from_parent(parent_div: bs4.element.Tag, container_to_get: str,
                               selector=None) -> bs4.element.Tag or None:
     """
@@ -68,6 +69,7 @@ def get_container_from_parent(parent_div: bs4.element.Tag, container_to_get: str
         return None
 
 
+# in-PROGRESS
 def find_all_containers_from_parent(parent_div: bs4.element.Tag, container_to_get: str, selector=None) -> list:
     """
     Finds and returns all container elements within a parent div using a CSS selector.
@@ -103,25 +105,28 @@ def get_soup(url: str) -> BeautifulSoup or None:
         if response.status_code == 200:
             return BeautifulSoup(response.content, 'html.parser')
         else:
-            logger.info(f"Response status code for {url}: {response.status_code}")
+            logger.debug(f"Response status code for {url}: {response.status_code}")
             return None
     except requests.exceptions.RequestException as e:
         logger.error(f"An error occurred while fetching {url}: {e}")
         return None
 
 
-def generate_url_with_query(base_url: str, query_param: str, q: str) -> str:
+def generate_url_with_query(base_url: str, query_param: str, q: str, num: int | None) -> str:
     """
     Generate a URL with query parameters.
 
     :param base_url: Base URL.
     :param query_param: Query parameter identifier.
     :param q: Query.
+    :param num: limiting result number.
     :return: Constructed URL with query parameters.
     """
     query_string = "+".join(q.split(' '))
     constructed_url = f"{base_url}{query_param}={query_string}"
-    logger.debug(f"Constructed URL: {constructed_url}")  # Add this line for debugging
+    if num:
+        constructed_url += f'&num={num}'
+    logger.debug(f"Constructed URL: {constructed_url}")
     return constructed_url
 
 
@@ -152,18 +157,6 @@ def get_current_page(
     return []
 
 
-def balance(unique_items: List[Card], max_limit_per_engine: int):
-    balanced_items = list()
-    cnt = defaultdict(int)
-    for item in unique_items:
-        cnt[item.engine] += 1
-    for engine in cnt.keys():
-        engine_items = [item for item in unique_items if item.engine == engine]
-        balanced_items.extend(engine_items[:min(max_limit_per_engine, cnt[engine])])
-    shuffle(balanced_items)
-    return balanced_items
-
-
 def remove_duplicate_cards(my_list: List[Card]) -> List[Card]:
     """
     Remove duplicates from a list of cards based on the 'url' attribute.
@@ -177,6 +170,7 @@ def remove_duplicate_cards(my_list: List[Card]) -> List[Card]:
         if item.url not in unique_urls:
             unique_urls.add(item.url)
             unique_items.append(item)
+    shuffle(unique_items)
     return unique_items
 
 

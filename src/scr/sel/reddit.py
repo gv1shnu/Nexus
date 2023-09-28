@@ -8,7 +8,7 @@ from selenium.common import WebDriverException, NoSuchElementException
 from selenium.webdriver.common.by import By
 
 # Internal imports
-from utl.driver import initialise_driver
+from utl.sel.driver import initialise_driver
 from utl.logger import Logger
 from src.helpers import generate_url_with_query, Card
 

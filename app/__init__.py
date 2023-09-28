@@ -37,8 +37,11 @@ def create_app(config_class=Config):
         try:
             # Get current path
             current_route: str = request.path
-            # Log the error
-            logger.error(f"An error occurred while fetching {current_route} route: {error}")
+            if current_route == '/None':
+                logger.debug(f"Current route empty error")
+            else:
+                # Log the error
+                logger.error(f"An error occurred while fetching {current_route} route: {error}")
             # Render a custom error template
             return render_template(
                 "error.html",

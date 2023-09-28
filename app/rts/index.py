@@ -2,20 +2,12 @@
 from flask import Blueprint, abort, render_template, current_app
 from jinja2 import TemplateNotFound
 
-# Internal import
+# Internal imports
+from decl import OPTIONS, FILTERS
 from utl.logger import Logger
 
 index_bp = Blueprint('index', __name__)
 
-# Predefined options and filters for the search
-OPTIONS: list = [
-    "Google", "Bing", "Duckduckgo",
-    "Yahoo", "YouTube", "Reddit"
-]
-FILTERS: list = [
-    "Text", "Images",
-    "Videos", "News"
-]
 logger = Logger()
 
 
