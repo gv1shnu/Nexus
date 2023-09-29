@@ -14,8 +14,6 @@ Search Nexus is a web application that allows users to perform searches across m
 - Press Enter to initiate the search.
 - Search results from multiple search engines will be displayed within seconds.
 
-**Note**: Make sure Chrome is your default browser. It helps. (Optional)
-
 
 ## Installation
 
@@ -38,13 +36,7 @@ Follow these steps to set up and run the Search Nexus Flask application:
 
 4. Start the Flask development server:
 
-		python app.py
-
-## Technologies Used
-
-- Flask: A micro web framework for Python programming language.
-- HTML5: The markup language used for structuring the web pages.
-- CSS3: The stylesheet language used for styling the web pages.
+		python run.py
 
 
 ## Limitations
