@@ -8,6 +8,8 @@ from typing import List, Dict, Callable
 
 # Internal imports
 from src.helpers import remove_duplicate_cards, pagify
+from src.scr.bs.yahoo import get_yahoo_results
+from src.scr.sel.yt import get_yt_results
 from utl.logger import Logger
 from decl import Pages, ITEMS_PER_PAGE, Card
 
@@ -24,8 +26,8 @@ class Scrape:
         self.pairs: List[Dict[str, Callable]] = [
             # {'name': "bing", 'func': get_bing_results},  # 1
             {'name': "duckduckgo", 'func': get_ddg_results},  # 2
-            # {'name': "yahoo", 'func': get_yahoo_results},  # 3
-            # {'name': "youtube", 'func': get_yt_results},  # 4
+            {'name': "yahoo", 'func': get_yahoo_results},  # 3
+            {'name': "youtube", 'func': get_yt_results},  # 4
             # {'name': "reddit", 'func': get_reddit_results},  # 5
             {'name': "google", 'func': get_google_results},  # 6
         ]

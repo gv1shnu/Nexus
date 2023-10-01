@@ -1,12 +1,12 @@
 
 # Internal imports
 from app import create_app
+from decl import MODE
 from utl.logger import Logger
 
 # Third party library
 from waitress import serve
 
-MODE: str = "PRODUCTION"
 logger = Logger()
 
 

@@ -33,7 +33,7 @@ def submit():
         (query, selected_options, filter_option)
     )
     end: float = time.perf_counter()
-    duration = round((end - start), 2)
+    duration = round((end - start), 1)
 
     cache_manager = current_app.extensions['cache_manager']
     cache_manager.cachify(pages, "pages")

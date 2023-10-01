@@ -47,8 +47,7 @@ def get_yahoo_results(
                                     if span:
                                         card.body = span.text
                             if card.title and card.url:
-                                card.channel_name = get_domain(card.title).split('.')[1]
-                                card.channel_url = "https://"+get_domain(card.title)
+                                card.channel = "https://"+get_domain(card.title)
                                 cards.append(card)
     except Exception as e:
         logger.error('\033[0m{}: {} - {}'.format(str(e), ENGINE_NAME, url))

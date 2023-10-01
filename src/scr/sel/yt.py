@@ -65,13 +65,11 @@ def get_yt_results(
                             if div_text_container:
                                 anchor_tag = div_text_container.find_element(By.TAG_NAME, 'a')
                                 channel_url = anchor_tag.get_attribute('href')
-                                channel_name = anchor_tag.text
                 except NoSuchElementException:
                     pass
                 if video_url and video_title:
                     card = Card(engine=ENGINE_NAME, title=video_title, url=video_url,
-                                body=body, channel_name=channel_name,
-                                channel_url=channel_url, icon=icon)
+                                body=body, channel=channel_url, icon=icon)
                     cards.append(card)
         driver.close()
     except (WebDriverException, NoSuchElementException) as e:

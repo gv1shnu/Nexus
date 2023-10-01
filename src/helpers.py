@@ -6,6 +6,7 @@ from typing import List
 
 # Third party libraries
 import bs4.element
+import aiohttp
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
@@ -92,27 +93,29 @@ def find_all_containers_from_parent(parent_div: bs4.element.Tag, container_to_ge
         return []
 
 
-def get_soup(url: str) -> BeautifulSoup or None:
+async def fetch_html(url: str) -> str:
+    async with aiohttp.ClientSession() as session:
+        header = get_header()
+        async with session.get(url, headers=header) as response:
+            return await response.text()
+
+
+async def get_soup(url: str) -> BeautifulSoup or None:
     """
     Get a BeautifulSoup object from a URL.
 
     :param url: URL to fetch and parse.
     :return: Parsed BeautifulSoup object or None if the request fails.
     """
-    header = get_header()
     try:
-        response = requests.get(url, headers=header)
-        if response.status_code == 200:
-            return BeautifulSoup(response.content, 'html.parser')
-        else:
-            logger.debug(f"Response status code for {url}: {response.status_code}")
-            return None
+        html_content = await fetch_html(url)
+        return BeautifulSoup(html_content, 'html.parser')
     except requests.exceptions.RequestException as e:
         logger.error(f"An error occurred while fetching {url}: {e}")
         return None
 
 
-def generate_url_with_query(base_url: str, query_param: str, q: str, num: int | None) -> str:
+def generate_url_with_query(base_url: str, query_param: str, q: str, num: int | None = None) -> str:
     """
     Generate a URL with query parameters.
 

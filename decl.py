@@ -1,6 +1,8 @@
 # Python standard library
 from typing import List
 
+MODE: str = "DEBUG"  # "PRODUCTION"
+
 
 class Card:
     def __init__(
@@ -31,7 +33,7 @@ Pages = List[Page]
 
 MAX_LIMIT_PER_ENGINE: int = 42
 
-ITEMS_PER_PAGE: int = 7
+ITEMS_PER_PAGE: int = 6
 
 # Predefined options and filters for the search
 OPTIONS: list = [

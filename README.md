@@ -29,7 +29,7 @@ Follow these steps to set up and run the Search Nexus Flask application:
    		cd SearchNexus
 
 
-3. To run this project, make sure you have Python 3.11 and pip installed on your system. Install the required dependencies:
+3. To run this project, make sure you have Python 3.10 and pip installed on your system. Install the required dependencies:
 	
 		pip install -r requirements.txt
 
