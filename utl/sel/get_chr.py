@@ -4,7 +4,7 @@
 import os
 
 # Internal imports
-from decl import SUPPORTED_PLATFORM
+from decl import SUPPORTED_PLATFORMS, OS_NAME, MODE
 from utl.logger import Logger
 
 logger = Logger()
@@ -18,11 +18,11 @@ def is_chrome_installed() -> bool:
         bool: True if Chrome is installed, False otherwise.
     """
     try:
-        os_name = SUPPORTED_PLATFORM
-        if os_name != SUPPORTED_PLATFORM:
-            logger.critical(f"Incompatible OS found.")
-            return False
-        ans = os.system("dpkg -l | grep google-chrome-stable") == 0
+        ans = None
+        if MODE == "PRODUCTION" and OS_NAME == "Linux":
+            ans = os.system("dpkg -l | grep google-chrome-stable") == 0
+        elif MODE == "DEBUG" and OS_NAME == "Windows":
+            ans = os.path.exists("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe")
         if not ans:
             logger.warning("Chrome is not installed on the system.")
         return ans

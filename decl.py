@@ -1,7 +1,8 @@
-# Python standard library
+# Python standard libraries
+import platform
 from typing import List
 
-MODE: str = "DEBUG"  # "PRODUCTION"
+MODE: str = "PRODUCTION"  # "DEBUG"
 
 
 class Card:
@@ -33,7 +34,7 @@ Pages = List[Page]
 
 MAX_LIMIT_PER_ENGINE: int = 42
 
-ITEMS_PER_PAGE: int = 6
+ITEMS_PER_PAGE: int = 7
 
 # Predefined options and filters for the search
 OPTIONS: list = [
@@ -49,9 +50,26 @@ FILTERS: list = [
 # Path for chromedriver to be stored
 CDR_PATH: str = "./cdr"
 
-# Since, host is Linux-based. Only that exec and driver is required.
-SUPPORTED_PLATFORM: str = "Linux"
+SUPPORTED_PLATFORMS: List[str] = ["Linux", "Windows"]
+
+OS_NAME: str = platform.system()
+
+PLATFORM_NAME: str = "linux64" if OS_NAME == "Linux" else "win64"
+
+CHROMEDRIVER_PATH: str = (
+        f"{CDR_PATH}/" +
+        (
+            "chromedriver"
+            if OS_NAME == "Linux"
+            else "chromedriver.exe"
+        )
+)
+
+ROUTES: List[str] = [
+    "/",
+    "/submit",
+    "/result",
+]
 
 # URL to download latest chromedriver from
 CFT_URL: str = "https://googlechromelabs.github.io/chrome-for-testing/"
-

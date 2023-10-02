@@ -1,6 +1,10 @@
-"""Yahoo Search Results Scraper [Under Construction]"""
+"""Yahoo Search Results Scraper [In-Progress]"""
 
+# Python standard libraries
+import time
 from typing import List
+
+# Internal imports
 from src.helpers import generate_url_with_query, get_domain, get_soup, Card
 from utl.logger import Logger
 
@@ -16,6 +20,7 @@ def get_yahoo_results(
         return []
     url = generate_url_with_query('https://search.yahoo.com/', 'search?q', query)
     cards = list()
+    start_time = time.time()
     try:
         soup = get_soup(url)
         if soup:
@@ -33,10 +38,10 @@ def get_yahoo_results(
                                 if h3:
                                     anchor_tag = h3.find('a')
                                     if anchor_tag:
-                                        aria = anchor_tag.get_user('aria-label')
+                                        aria = anchor_tag.get('aria-label')
                                         if aria:
                                             card.title = aria
-                                        href = anchor_tag.get_user('href')
+                                        href = anchor_tag.get('href')
                                         if href:
                                             card.url = href
                             div_body = li.find('div', class_="compText aAbs")
@@ -49,9 +54,13 @@ def get_yahoo_results(
                             if card.title and card.url:
                                 card.channel = "https://"+get_domain(card.title)
                                 cards.append(card)
+                    if time.time() - start_time > 5:
+                        logger.info("Time limit crossed. Returning")
+                        return cards
     except Exception as e:
         logger.error('\033[0m{}: {} - {}'.format(str(e), ENGINE_NAME, url))
     return cards
+
 
 # HTML tree structure
 # ------- ol.reg  searchCenterMiddle

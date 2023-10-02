@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import ChromeOptions
 
 # Internal imports
-from decl import CDR_PATH
+from decl import CDR_PATH, OS_NAME, CHROMEDRIVER_PATH
 from utl.sel.get_chr import is_chrome_installed
 from utl.sel.get_driver import get_chromedriver_url, download, unzip
 from utl.logger import Logger
@@ -25,7 +25,6 @@ def make_chromedriver_executable(driver_path: str):
         driver_path (str): Path to the chromedriver executable.
     """
     try:
-        logger.debug("Changing permission to make chromedriver executable")
         os.chmod(driver_path, 0o755)  # Set execute permission
         logger.info("Chromedriver made executable")
     except Exception as e:
@@ -47,12 +46,10 @@ def initialise_driver() -> webdriver.Chrome or None:
     if not os.path.exists(CDR_PATH):
         logger.debug("Fetching chromedriver")
         try:
-            result: str = "linux64"
             cdurl = get_chromedriver_url()
             downloadStatus = download(cdurl, CDR_PATH, "chromedriver.zip")
             if downloadStatus:
-                unzipStatus = unzip(f"{CDR_PATH}/chromedriver.zip", CDR_PATH, result)
-                if not unzipStatus:
+                if not unzip():
                     logger.error("Chromedriver unzip failed")
                     return None
             else:
@@ -63,12 +60,12 @@ def initialise_driver() -> webdriver.Chrome or None:
             logger.error(f"An error occurred while downloading chromedriver: {e}")
             return None
 
-    chrome_driver_path = f"{CDR_PATH}/chromedriver"
-    make_chromedriver_executable(chrome_driver_path)
+    if OS_NAME == "Linux":
+        make_chromedriver_executable(CHROMEDRIVER_PATH)
     headless = "--headless=chrome"
     gpu = ""
     try:
-        service = Service(executable_path=chrome_driver_path)
+        service = Service(executable_path=CHROMEDRIVER_PATH)
         options = ChromeOptions()
         options.add_argument(f"{headless} --no-sandbox --disable-dev-shm-usage {gpu}")
         _driver = webdriver.Chrome(service=service, options=options)

@@ -1,5 +1,5 @@
-"""YouTube Search Results Scraper [Under Construction]"""
-
+"""YouTube Search Results Scraper"""
+import time
 # Python standard library
 from typing import List
 
@@ -25,8 +25,9 @@ def get_yt_results(
         return []
     cards = list()
     url = generate_url_with_query("https://www.youtube.com/", "results?search_query", query)
+    start_time = time.time()
     try:
-        driver.get_user(url)
+        driver.get(url)
         elem = driver.find_element(By.ID, 'contents')
         children_elems = elem.find_elements(By.ID, 'dismissible')
         for child in children_elems:
@@ -71,6 +72,10 @@ def get_yt_results(
                     card = Card(engine=ENGINE_NAME, title=video_title, url=video_url,
                                 body=body, channel=channel_url, icon=icon)
                     cards.append(card)
+                if time.time() - start_time > 10:
+                    logger.info("Time limit crossed. Returning")
+                    driver.close()
+                    return cards
         driver.close()
     except (WebDriverException, NoSuchElementException) as e:
         logger.exception('\033[0m{}: {} - {}'.format(str(e), ENGINE_NAME, url))

@@ -10,7 +10,7 @@ import requests as requests
 import zipfile
 
 # Internal imports
-from decl import CFT_URL
+from decl import CFT_URL, PLATFORM_NAME, CDR_PATH, OS_NAME
 from src.helpers import get_soup, get_header
 from utl.logger import Logger
 
@@ -32,10 +32,11 @@ def get_chromedriver_url() -> str or None:
                 version = data1.find('code')
                 if version:
                     v = str(version)[6:-7]
-                    return f"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/{v}/linux64/chromedriver-linux64.zip"
+                    return (f"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/"
+                            f"{v}/{PLATFORM_NAME}/chromedriver-{PLATFORM_NAME}.zip")
     except Exception as e:
         logger.error(f"An error occurred while getting downloading link for chromedriver: {e}")
-        return None
+    return None
 
 
 def download(url: str, download_folder: str, name: str) -> bool:
@@ -77,23 +78,19 @@ def download(url: str, download_folder: str, name: str) -> bool:
         return False
 
 
-def unzip(zip_path: str, extract_dir: str, platform: str) -> bool:
+def unzip() -> bool:
     """
     Extract the Chromedriver executable from a ZIP archive.
-
-    Args:
-        zip_path (str): Path to the ZIP archive.
-        extract_dir (str): Directory to extract the executable to.
-        platform (str): Platform identifier ("linux64", "win64").
     """
-    target_folder = f"chromedriver-linux64"
-    exec_filename = "chromedriver"
+    zip_path = f"{CDR_PATH}/chromedriver.zip"
+    target_folder = f"chromedriver-{PLATFORM_NAME}"
+    exec_filename = "chromedriver" if OS_NAME == "Linux" else "chromedriver.exe"
     success = False
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         for file_info in zip_ref.infolist():
             if target_folder in file_info.filename and file_info.filename.endswith(exec_filename):
                 # Extract the .exe file to the specified directory
-                extract_path = os.path.join(extract_dir, os.path.basename(file_info.filename))
+                extract_path = os.path.join(CDR_PATH, os.path.basename(file_info.filename))
                 with open(extract_path, 'wb') as extract_file:
                     extract_file.write(zip_ref.read(file_info.filename))
                 logger.info(f"{exec_filename} extracted to {extract_path}")
@@ -101,7 +98,6 @@ def unzip(zip_path: str, extract_dir: str, platform: str) -> bool:
                 break
     if not success:
         logger.error(f"{exec_filename} not found in the ZIP file.")
-        return False
 
     logger.debug('Deleting zip file')
     if success and os.path.exists(zip_path):

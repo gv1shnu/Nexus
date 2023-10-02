@@ -48,7 +48,7 @@
                             <!-- Nexus checkbox for option-->
 
                             <!-- For the time being -->
-                            {% if option in ["Bing", "Reddit", "YouTube", "Yahoo"] %}
+                            {% if option in ["Bing", "Reddit"] %}
                                 <label>
                                     <input type="checkbox" name="options"
                                            value="{{ option.lower() }}"
@@ -56,7 +56,7 @@
                                     {{ option }}
                                 </label>
 
-                            <!-- Enabling google and duckduckgo checkbox as default -->
+                            <!-- Enabling other checkbox -->
                             {% else %}
                                 <label>
                                     <!-- Applying lower operation for solving unintended ambiguity -->

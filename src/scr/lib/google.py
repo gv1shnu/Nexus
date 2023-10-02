@@ -15,7 +15,7 @@ ENGINE_NAME: str = "Google"
 logger = Logger()
 
 
-def search(url: str) -> tuple:
+def search(url: str):
     soup = get_soup(url)
     result_block = soup.find_all("div", attrs={"class": "g"})
     for result in result_block:
@@ -42,7 +42,7 @@ def get_google_results(
         return []
     cards = list()
     try:
-        dips: tuple = search(
+        dips = search(
             generate_url_with_query(
                 "https://www.google.com/",
                 "search?q",

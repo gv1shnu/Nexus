@@ -11,7 +11,7 @@ from app.rts.index import index_bp
 from app.act.fetch import fetch_bp
 from app.config import Config, basedir
 from app.rts.result import res_bp
-from decl import MODE
+from decl import MODE, ROUTES
 from utl.cache_manager import CacheManager
 from utl.logger import Logger
 
@@ -37,10 +37,9 @@ def create_app(config_class=Config):
     def handle_error(error):
         # Get current path
         current_route: str = request.path
-        if current_route == '/None':
-            logger.debug(f"Current route empty error")
+        if current_route not in ROUTES:
+            logger.debug(f"Irrelevant error while fetching {current_route}: {error}")
         else:
-            # Log the error
             logger.error(f"An error occurred while fetching {current_route} route: {error}")
         if MODE == "DEBUG":
             try:
