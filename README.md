@@ -10,7 +10,7 @@ Search Nexus is a web application that allows users to perform searches across m
 
 ## Usage
 
-- Enter your search query in the search box at [searchnexus.net](https://searchnexus.net).
+- Enter your search query in the search box in homepage.
 - Press Enter to initiate the search.
 - Search results from multiple search engines will be displayed within seconds.
 
