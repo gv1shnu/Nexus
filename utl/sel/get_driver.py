@@ -95,7 +95,6 @@ def unzip() -> bool:
                     extract_file.write(zip_ref.read(file_info.filename))
                 logger.info(f"{exec_filename} extracted to {extract_path}")
                 success = True
-                break
     if not success:
         logger.error(f"{exec_filename} not found in the ZIP file.")
 

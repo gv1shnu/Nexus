@@ -68,7 +68,7 @@ CHROMEDRIVER_PATH: str = (
 ROUTES: List[str] = [
     "/",
     "/submit",
-    "/result",
+    "/result"
 ]
 
 # URL to download latest chromedriver from
