@@ -1,5 +1,6 @@
 # Python standard library
 import time
+from typing import List, Dict
 
 # Third-party libraries
 from flask import (
@@ -12,6 +13,7 @@ from flask import (
 from src.scrape import Scrape
 from utl.logger import Logger
 from decl import Pages
+from src.handler import Handler
 
 fetch_bp = Blueprint('fetch', __name__)
 logger = Logger()
@@ -23,17 +25,30 @@ logger = Logger()
 )
 def submit():
     # Fetch the POST requests from index route
-    query: str = request.form.get('q')
-    selected_options: list = request.form.getlist('options')
-    filter_option: str = request.form.get('filter')
+    if request.method == 'POST':
+        query: str = request.form.get('q')
+        selected_options: list = request.form.getlist('options')
+        filter_option: str = request.form.get('filter')
+    else:
+        logger.error("Invalid request method")
+        return
 
+    handler = Handler()
     start: float = time.perf_counter()
-    scraper = Scrape()
-    pages: Pages = scraper.get_results(
-        (query, selected_options, filter_option)
-    )
+    data: List[Dict] = handler.get_search_history(query, selected_options, filter_option)
+    if data:
+        pages: Pages = data[0]['results']
+        count: int = data[0]['count']
+    else:
+        scraper = Scrape()
+        pages: Pages = scraper.get_results(
+            (query, selected_options, filter_option)
+        )
+        count: int = sum([
+            len(i) for i in pages
+        ])
     end: float = time.perf_counter()
-    duration = round((end - start), 1)
+    duration = round(end - start, 1)
 
     cache_manager = current_app.extensions['cache_manager']
     cache_manager.cachify(pages, "pages")
@@ -44,7 +59,7 @@ def submit():
         session["duration"]
     ) = (
         query,
-        len(pages) * 7,
+        count,
         duration
     )
 

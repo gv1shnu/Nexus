@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.common import NoSuchElementException, WebDriverException
 
 # Internal imports
-from src.helpers import generate_url_with_query, Card
+from src.helpers import generate_url_with_query, Card, relevance_score_calculator
 from utl.sel.driver import initialise_driver
 from utl.logger import Logger
 
@@ -69,8 +69,13 @@ def get_yt_results(
                 except NoSuchElementException:
                     pass
                 if video_url and video_title:
-                    card = Card(engine=ENGINE_NAME, title=video_title, url=video_url,
-                                body=body, channel=channel_url, icon=icon)
+                    card = Card(
+                        engine=ENGINE_NAME, title=video_title, url=video_url,
+                        body=body, channel=channel_url, icon=icon,
+                        relevance=relevance_score_calculator(
+                            document=video_title + body, input_keyword=query
+                        )
+                    )
                     cards.append(card)
                 if time.time() - start_time > 10:
                     logger.info("Time limit crossed. Returning")
@@ -82,6 +87,7 @@ def get_yt_results(
         return []
     driver.quit()
     return cards
+
 
 # HTML tree structure
 # ----- div#contents. style-scope ytd-item-section-renderer style-scope ytd-item-section-renderer

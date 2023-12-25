@@ -3,13 +3,16 @@
 # Python standard libraries
 from typing import List
 
-# Third party libraries
+# Third party library
 import requests
 
 # Internal imports
-from src.helpers import get_domain, Card, get_soup, generate_url_with_query
+from src.helpers import (
+    get_domain, Card,
+    get_soup, generate_url_with_query,
+    relevance_score_calculator
+)
 from utl.logger import Logger
-from decl import MAX_LIMIT_PER_ENGINE
 
 ENGINE_NAME: str = "Google"
 logger = Logger()
@@ -47,7 +50,7 @@ def get_google_results(
                 "https://www.google.com/",
                 "search?q",
                 query,
-                MAX_LIMIT_PER_ENGINE
+                200
             )
         )
         for dip in dips:
@@ -56,7 +59,9 @@ def get_google_results(
             card = Card(
                 engine=ENGINE_NAME, title=dip[1],
                 url=url, channel=channel_url,
-                body=dip[2]
+                body=dip[2], relevance=relevance_score_calculator(
+                    document=dip[2], input_keyword=query
+                ), icon=None
             )
             cards.append(card)
     except requests.exceptions.HTTPError:

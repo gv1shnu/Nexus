@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Adding necessary stylesheets -->
+        <link rel="preload" href="{{ url_for('static', filename='img/background.jpg') }}" as="image" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/results.css') }}">
 
@@ -14,6 +15,7 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='ico/favicon-32x32.png') }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='ico/favicon-16x16.png') }}">
         <link rel="manifest" href="{{ url_for('static', filename='ico/site.webmanifest') }}">
+
     </head>
     <body>
         <!-- Nexus home redirection button -->
@@ -21,11 +23,7 @@
             <i class="fa fa-home" style="font-size: 20px;"></i>
         </a>
         <div id="result-container">
-            <!-- Template left Ad -->
             <div class="left-div">
-                <div class="ad">
-                    <img src="https://assets.visme.co/templates/banners/thumbnails/i_The-Best-Ads-Vertical_full.jpg" alt="Ad Image 1">
-                </div>
             </div>
 
             <!-- Nexus result container -->
@@ -52,7 +50,7 @@
                                                         <a href="{{ card.channel }}" target="_blank">{{ card.channel[8:] }}</a>
                                                     </div>
                                                     <div class="engine">
-                                                        <a href="{{ engine_url }}" target="_blank">{{ card.engine }}</a>
+                                                        <a href="{{ engine_url }}" target="_blank">{{ card.engine }} {{ card.rel }}%</a>
                                                     </div>
                                                 </div>
                                                 <div class="body">
@@ -74,18 +72,12 @@
                 {% endif %}
             </div>
 
-            <!-- Template right ad -->
             <div class="right-div">
-                <div class="ad">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuGitoJPuINoSe7oxqNwDQ_JaIas5OguH-FA&usqp=CAU" alt="Ad Image 2">
-                </div>
             </div>
         </div>
-        {% if current_page == 1 %}
-            <div class="stats">
-                {{ count }} results ({{ execution_time }} seconds)
-            </div>
-        {% endif %}
+        <div class="stats">
+            {{ count }} results ({{ execution_time }}s)
+        </div>
         <div class="pagination">
             {% if total_pages > 1 %}
                 {% if current_page > 1 %}

@@ -9,14 +9,17 @@ import time
 # Internal imports
 from src.helpers import get_current_page, get_icon
 from utl.logger import Logger
-from decl import Pages, Page, Card, ITEMS_PER_PAGE
+from decl import Pages, Page, Card, ITEMS_PER_PAGE, RESULT_TEMPLATE
 
 res_bp = Blueprint('res', __name__)
 logger = Logger()
 
 
 def update_icon_for_card(card: Card):
-    card["icon"] = get_icon(card["url"])
+    if not card["icon"]:
+        card["icon"] = get_icon(card["url"])
+    else:
+        logger.debug("Icon already present")
 
 
 # index route of the res blueprint
@@ -46,17 +49,18 @@ def index():
             for future in futures:
                 future.result()
         end: float = time.perf_counter()
-        logger.info(f"Fetching icons took {round(end - start, 1)}s")
+        icon_time: float = round(end - start, 1)
+        logger.info(f"Fetching icons took {icon_time}s")
 
         return render_template(
-            'results.html',
+            template_name_or_list=RESULT_TEMPLATE,
             q=session["query"],
             page=current_page,
             total_pages=len(pages),
             current_page=page_number,
             count=session["count"],
-            execution_time=session["duration"]
+            execution_time=round(session["duration"] + icon_time, 2)
         )
     except TemplateNotFound:
-        logger.error(f"results.html was not found.")
+        logger.error(f"{RESULT_TEMPLATE} was not found.")
         abort(404)

@@ -11,7 +11,7 @@ from app.rts.index import index_bp
 from app.act.fetch import fetch_bp
 from app.config import Config, basedir
 from app.rts.result import res_bp
-from decl import MODE, ROUTES
+from decl import MODE, ROUTES, ERROR_TEMPLATE
 from utl.cache_manager import CacheManager
 from utl.logger import Logger
 
@@ -45,11 +45,11 @@ def create_app(config_class=Config):
             try:
                 # Render a custom error template
                 return render_template(
-                    "error.html",
+                    template_name_or_list=ERROR_TEMPLATE,
                     error_message=str(error)
                 )
             except TemplateNotFound:
-                logger.error(f"error.html was not found.")
+                logger.error(f"{ERROR_TEMPLATE} was not found.")
                 abort(404)
 
     cache_manager = CacheManager(app)

@@ -1,15 +1,20 @@
 # Python standard libraries
 import platform
+import os
 from typing import List
 
-MODE: str = "PRODUCTION"  # "DEBUG"
+MODE: str = "DEBUG"  # "PRODUCTION"
+
+INDEX_TEMPLATE = "index.html"
+ERROR_TEMPLATE = "error.html"
+RESULT_TEMPLATE = "results.html"
 
 
 class Card:
     def __init__(
             self, title=None, url=None,
             body=None, channel=None,
-            icon=None, engine=None
+            icon=None, engine=None, relevance=None
     ):
         self.title = title
         self.url = url
@@ -17,6 +22,18 @@ class Card:
         self.channel = channel
         self.icon = icon
         self.engine = engine
+        self.rel = relevance
+
+    def to_dict(self):
+        return {
+            'title': self.title,
+            'url': self.url,
+            'body': self.body,
+            'channel': self.channel,
+            'icon': self.icon,
+            'engine': self.engine,
+            'rel': self.rel
+        }
 
     def __str__(self):
         return f'<Card data: {self.title}>'
@@ -31,8 +48,6 @@ class Card:
 Page = List[Card]
 
 Pages = List[Page]
-
-MAX_LIMIT_PER_ENGINE: int = 42
 
 ITEMS_PER_PAGE: int = 7
 

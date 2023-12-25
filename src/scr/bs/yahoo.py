@@ -5,7 +5,7 @@ import time
 from typing import List
 
 # Internal imports
-from src.helpers import generate_url_with_query, get_domain, get_soup, Card
+from src.helpers import generate_url_with_query, get_domain, get_soup, Card, relevance_score_calculator
 from utl.logger import Logger
 
 ENGINE_NAME = "Yahoo"
@@ -53,6 +53,9 @@ def get_yahoo_results(
                                         card.body = span.text
                             if card.title and card.url:
                                 card.channel = "https://"+get_domain(card.title)
+                                card.rel = relevance_score_calculator(
+                                    document=card.title+card.body, input_keyword=query
+                                )
                                 cards.append(card)
                     if time.time() - start_time > 5:
                         logger.info("Time limit crossed. Returning")

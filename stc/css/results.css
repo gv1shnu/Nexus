@@ -121,22 +121,6 @@ a:hover {
     padding: 10px;
 }
 
-.ad {
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 100%;
-}
-
-.ad img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    object-fit: contain;
-    align: center;
-    padding: 10px;
-}
-
 .center-div{
     width: 65vw;
     padding: 10px;

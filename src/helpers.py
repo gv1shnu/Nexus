@@ -3,6 +3,7 @@
 # Python standard libraries
 from random import shuffle
 from typing import List
+from datetime import datetime
 
 # Third party libraries
 import bs4.element
@@ -12,6 +13,8 @@ from urllib.parse import urlparse
 import requests
 import favicon
 from requests.exceptions import HTTPError
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Internal imports
 from utl.logger import Logger
@@ -31,6 +34,18 @@ def get_icon(url: str) -> str | None:
         return None
 
 
+def relevance_score_calculator(document: str, input_keyword: str) -> float:
+    # Create TF-IDF vectorizer
+    vectorizer = TfidfVectorizer()
+    # Fit and transform the document and input keyword
+    tfidf_matrix = vectorizer.fit_transform([document, input_keyword])
+
+    # Calculate cosine similarity between the document and the input keyword
+    similarity_score = cosine_similarity(tfidf_matrix[-1], tfidf_matrix[:-1])
+    score = round(similarity_score.flatten()[0]*100, 1)
+    return 0.0 if score is None else score
+
+
 def get_domain(url: str) -> str:
     """
     Get the domain from a URL.
@@ -40,6 +55,12 @@ def get_domain(url: str) -> str:
     """
     parsed_url = urlparse(url)
     return parsed_url.netloc
+
+
+def is_today(date_string: str) -> bool:
+    input_date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S.%f')
+    current_date = datetime.now()
+    return input_date.date() == current_date.date()
 
 
 # in-PROGRESS
@@ -122,7 +143,7 @@ def generate_url_with_query(base_url: str, query_param: str, q: str, num: int | 
     constructed_url = f"{base_url}{query_param}={query_string}"
     if num:
         constructed_url += f'&num={num}'
-    logger.debug(f"Constructed URL: {constructed_url}")
+    # logger.debug(f"Constructed URL: {constructed_url}")
     return constructed_url
 
 

@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Adding necessary stylesheets -->
+        <link rel="preload" href="{{ url_for('static', filename='img/background.jpg') }}" as="image" />
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -97,6 +98,7 @@
             <a href="https://github.com/gv1shnu/SearchNexus" target="_blank" class="github-corner">
                 <i class="fa fa-github" style="font-size:25px"></i>
             </a>
+
             <!-- Author(me) name -->
             <p class="last"> &copy; 2023 | GANDARAPU VISHNU </p>
         </footer>

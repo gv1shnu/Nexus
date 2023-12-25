@@ -9,9 +9,8 @@ from requests.exceptions import HTTPError
 from duckduckgo_search import DDGS
 
 # Internal imports
-from src.helpers import get_domain, Card, get_header
+from src.helpers import get_domain, Card, get_header, relevance_score_calculator
 from utl.logger import Logger
-from decl import MAX_LIMIT_PER_ENGINE
 
 ENGINE_NAME: str = "Duckduckgo"
 logger = Logger()
@@ -23,7 +22,6 @@ def get_ddg_results(
 ) -> List[Card]:
     cards = list()
     try:
-        cnt: int = 0
         if filter_option == "text":
             for r in DDGS(headers=get_header()).text(query):
                 url: str = r["href"]
@@ -31,11 +29,10 @@ def get_ddg_results(
                 card = Card(
                     title=r['title'], url=r['href'],
                     channel=channel_url, body=r['body'],
-                    engine=ENGINE_NAME
+                    engine=ENGINE_NAME, relevance=relevance_score_calculator(
+                        document=r['title']+r['body'], input_keyword=query
+                    ), icon=None
                 )
-                cnt += 1
-                if cnt > MAX_LIMIT_PER_ENGINE:
-                    break
                 cards.append(card)
         elif filter_option == "images":
             for r in DDGS(headers=get_header()).images(query):
@@ -43,11 +40,10 @@ def get_ddg_results(
                     title=r['title'], url=r['image'],
                     channel=r['source'], body=r['image'],
                     icon=r['thumbnail'],
-                    engine=ENGINE_NAME
+                    engine=ENGINE_NAME, relevance=relevance_score_calculator(
+                        document=r['image'], input_keyword=query
+                    )
                 )
-                cnt += 1
-                if cnt > MAX_LIMIT_PER_ENGINE:
-                    break
                 cards.append(card)
         elif filter_option == "videos":
             for r in DDGS(headers=get_header()).videos(query):
@@ -58,9 +54,6 @@ def get_ddg_results(
                     icon=r['images']['small'],
                     engine=ENGINE_NAME
                 )
-                cnt += 1
-                if cnt > MAX_LIMIT_PER_ENGINE:
-                    break
                 cards.append(card)
         elif filter_option == "news":
             for r in DDGS(headers=get_header()).news(query):
@@ -68,11 +61,10 @@ def get_ddg_results(
                     title=r['title'], url=r['href'],
                     channel=r['source'], body=r['body'],
                     icon=r['image'],
-                    engine=ENGINE_NAME
+                    engine=ENGINE_NAME, relevance=relevance_score_calculator(
+                        document=r['body'], input_keyword=query
+                    )
                 )
-                cnt += 1
-                if cnt > MAX_LIMIT_PER_ENGINE:
-                    break
                 cards.append(card)
         else:
             logger.error("Invalid filter option")
