@@ -15,7 +15,6 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='ico/favicon-32x32.png') }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='ico/favicon-16x16.png') }}">
         <link rel="manifest" href="{{ url_for('static', filename='ico/site.webmanifest') }}">
-
     </head>
     <body>
         <!-- Nexus home redirection button -->
@@ -23,9 +22,6 @@
             <i class="fa fa-home" style="font-size: 20px;"></i>
         </a>
         <div id="result-container">
-            <div class="left-div">
-            </div>
-
             <!-- Nexus result container -->
             <div class="center-div">
                 {% if page %}
@@ -70,9 +66,6 @@
                         No results found.
                     </p>
                 {% endif %}
-            </div>
-
-            <div class="right-div">
             </div>
         </div>
         <div class="stats">

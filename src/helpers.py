@@ -129,7 +129,11 @@ def get_soup(url: str) -> BeautifulSoup or None:
         return None
 
 
-def generate_url_with_query(base_url: str, query_param: str, q: str, num: int | None = None) -> str:
+def generate_url_with_query(
+        base_url: str,
+        query_param: str,
+        q: str, num: int | None = None
+) -> str:
     """
     Generate a URL with query parameters.
 
@@ -174,7 +178,9 @@ def get_current_page(
     return []
 
 
-def remove_duplicate_cards(my_list: List[Card]) -> List[Card]:
+def remove_duplicate_cards(
+        my_list: List[Card]
+) -> List[Card]:
     """
     Remove duplicates from a list of cards based on the 'url' attribute.
 

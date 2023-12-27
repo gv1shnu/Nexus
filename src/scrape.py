@@ -6,14 +6,14 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 from typing import List, Dict, Callable
 
-from src.handler import Handler
 # Internal imports
 from src.helpers import remove_duplicate_cards, pagify
-from src.scr.bs.yahoo import get_yahoo_results
-from src.scr.sel.yt import get_yt_results
 from utl.logger import Logger
 from decl import Pages, ITEMS_PER_PAGE, Card
+from src.handler import Handler
 
+from src.scr.bs.yahoo import get_yahoo_results
+from src.scr.sel.yt import get_yt_results
 from src.scr.lib.ddg import get_ddg_results
 from src.scr.lib.google import get_google_results
 
@@ -61,7 +61,10 @@ class Scrape:
                 key=lambda x: x.rel if x.rel is not None else float('-inf'),
                 reverse=True
             )
-            logger.info(f"all search took {duration}s for {len(sorted_results)} results")
+            logger.info(
+                f"all search took {duration}s "
+                f"for {len(sorted_results)} results"
+            )
 
             pages: Pages = pagify(
                 sorted_results, ITEMS_PER_PAGE

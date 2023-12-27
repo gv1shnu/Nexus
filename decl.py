@@ -3,11 +3,11 @@ import platform
 import os
 from typing import List
 
-MODE: str = "DEBUG"  # "PRODUCTION"
+MODE: str = "PRODUCTION"  # DEBUG
 
-INDEX_TEMPLATE = "index.html"
-ERROR_TEMPLATE = "error.html"
-RESULT_TEMPLATE = "results.html"
+INDEX_TEMPLATE: str = "index.html"
+ERROR_TEMPLATE: str = "error.html"
+RESULT_TEMPLATE: str = "results.html"
 
 
 class Card:
