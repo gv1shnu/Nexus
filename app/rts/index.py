@@ -14,8 +14,9 @@ logger = Logger()
 # Home route of the application
 @index_bp.route('/')
 def index():
-    cache_manager = current_app.extensions['cache_manager']
-    cache_manager.clear()
+    cache_manager = current_app.extensions.get('cache_manager')
+    if cache_manager:
+        cache_manager.clear()
     try:
         return render_template(
             template_name_or_list=INDEX_TEMPLATE,

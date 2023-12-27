@@ -28,7 +28,7 @@ def update_icon_for_card(card: Card):
 )
 def index():
     try:
-        cache_manager = current_app.extensions['cache_manager']
+        cache_manager = current_app.extensions.get('cache_manager')
         pages: Pages = cache_manager.get_from_cache("pages")
 
         page_number = int(request.args.get('page', 1))
