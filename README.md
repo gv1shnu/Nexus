@@ -14,6 +14,14 @@ Nexus is a web application that allows users to perform searches across multiple
 - Press Enter to initiate the search.
 - Search results from multiple search engines will be displayed within seconds.
 
+## Screenshots
+
+![Screenshot (157)](https://github.com/gv1shnu/Nexus/assets/121789146/84dfe62a-4a40-4ffb-9273-211078a5e5fd)
+![Screenshot (159)](https://github.com/gv1shnu/Nexus/assets/121789146/c1ec0ddb-f66c-42f4-bc72-a6059f9fe0d7)
+![Screenshot (160)](https://github.com/gv1shnu/Nexus/assets/121789146/cf39ba8d-f4b9-4e62-9ad3-78840f284e61)
+![Screenshot (161)](https://github.com/gv1shnu/Nexus/assets/121789146/5b782a3a-2de7-49ca-9be0-fa0fcc36339e)
+![Screenshot (162)](https://github.com/gv1shnu/Nexus/assets/121789146/3e4ecb4b-c6dd-4f2e-97db-961ff0821265)
+
 
 ## Installation
 
