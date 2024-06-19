@@ -3,7 +3,7 @@ import platform
 import os
 from typing import List
 
-MODE: str = "PRODUCTION"  # DEBUG
+MODE: str = "DEBUG"  #PRODUCTION
 
 INDEX_TEMPLATE: str = "index.html"
 ERROR_TEMPLATE: str = "error.html"
